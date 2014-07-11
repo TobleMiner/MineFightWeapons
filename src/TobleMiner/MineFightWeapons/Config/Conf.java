@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import TobleMiner.MineFight.Util.IO.File.FileUtil;
 import TobleMiner.MineFightWeapons.Main;
+import TobleMiner.MineFightWeapons.Config.Weapon.Explosive.ConfC4;
 import TobleMiner.MineFightWeapons.Config.Weapon.Explosive.ConfClaymore;
 
 public class Conf
@@ -16,6 +17,7 @@ public class Conf
 	
 	private YamlConfiguration conf;
 	public ConfClaymore claymore;
+	public ConfC4 c4;
 	
 	public Conf(File plugindir)
 	{
@@ -42,6 +44,7 @@ public class Conf
 				this.conf.save(confFile);
 			}
 			this.claymore = new ConfClaymore(confdir, resetAll);
+			this.c4 = new ConfC4(confdir, resetAll);
 		}
 		catch(Exception ex)
 		{

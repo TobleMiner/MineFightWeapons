@@ -72,9 +72,9 @@ public class Claymore implements Weapon
 			this.claymorsByPlayer.get(player).add(clay);
 			this.claymorsByItem.put(item, clay);
 			this.claymorsByMatch.get(m).add(clay);
-			if(this.claymorsByPlayer.get(player).size() >= Main.config.claymore.getLimit(m.getWorld()))
+			if(this.claymorsByPlayer.get(player).size() > Main.config.claymore.getLimit(m.getWorld()))
 			{
-				List<WpClaymore> clays = this.claymorsByPlayer.get(player);
+				List<WpClaymore> clays = new ArrayList<>(this.claymorsByPlayer.get(player));
 				if(clays.size() > 0)
 				{
 					WpClaymore tclay = clays.get(0);
@@ -188,7 +188,7 @@ public class Claymore implements Weapon
 	{
 		if(Main.config.claymore.despawnOnDeath(m.getWorld()))
 		{
-			List<WpClaymore> clays = this.claymorsByPlayer.get(killed);
+			List<WpClaymore> clays = new ArrayList<>(this.claymorsByPlayer.get(killed));
 			for(WpClaymore clay : clays)
 			{
 				this.remove(clay);
@@ -232,7 +232,7 @@ public class Claymore implements Weapon
 	public void onLeave(Match m, PVPPlayer player) 
 	{
 		Debugger.writeDebugOut("Removing claymore-entry for " + player.thePlayer.getName());
-		List<WpClaymore> clays = claymorsByPlayer.get(player);
+		List<WpClaymore> clays = new ArrayList<>(this.claymorsByPlayer.get(player));
 		for(WpClaymore clay : clays)
 		{
 			claymorsByItem.remove(clay.claymore);
@@ -245,7 +245,7 @@ public class Claymore implements Weapon
 	public void onTeamchange(Match m, PVPPlayer player)
 	{
 		Debugger.writeDebugOut("Removing claymors due to teamchange: " + player.thePlayer.getName());
-		List<WpClaymore> clays = this.claymorsByPlayer.get(player);
+		List<WpClaymore> clays = new ArrayList<>(this.claymorsByPlayer.get(player));
 		for(WpClaymore clay : clays)
 		{
 			this.remove(clay);

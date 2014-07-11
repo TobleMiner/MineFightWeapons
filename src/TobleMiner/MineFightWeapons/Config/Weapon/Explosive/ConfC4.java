@@ -2,12 +2,14 @@ package TobleMiner.MineFightWeapons.Config.Weapon.Explosive;
 
 import java.io.File;
 
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class ConfClaymore extends ConfExplosive
+public class ConfC4 extends ConfExplosive
 {
-	public ConfClaymore(File confdir, boolean forceReset) 
+
+	public ConfC4(File confdir, boolean forceReset) 
 	{
 		super(confdir, forceReset);
 	}
@@ -15,7 +17,7 @@ public class ConfClaymore extends ConfExplosive
 	@Override
 	protected String getFilename() 
 	{
-		return "claymore.conf";
+		return "c4.conf";
 	}
 	
 	public boolean canOwnerPickup(World w)
@@ -26,6 +28,30 @@ public class ConfClaymore extends ConfExplosive
 			return conf.getBoolean("canOwnerPickup", true);
 		}
 		return true;
+	}
+	
+	public Material getDetonaterMaterial(World w)
+	{
+		YamlConfiguration conf = this.getConfig(w);
+		if(conf != null)
+		{
+			String matname = conf.getString("canEnemyPickup", "invalid");
+			Material mat = Material.getMaterial(matname);
+			if(mat != null)
+				return mat;
+			
+		}
+		return Material.DIAMOND;
+	}
+	
+	public int getDetonatorSubId(World w)
+	{		
+		YamlConfiguration conf = this.getConfig(w);
+		if(conf != null)
+		{
+			return conf.getInt("detonatorSubId", 0);
+		}
+		return 0;
 	}
 	
 	public boolean canEnemyPickup(World w)
@@ -43,7 +69,7 @@ public class ConfClaymore extends ConfExplosive
 		YamlConfiguration conf = this.getConfig(w);
 		if(conf != null)
 		{
-			return conf.getInt("claymorelimit", 4);
+			return conf.getInt("c4limit", 4);
 		}
 		return 4;
 	}
