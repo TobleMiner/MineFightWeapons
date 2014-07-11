@@ -29,7 +29,7 @@ public class ConfC4 extends ConfExplosive
 		return true;
 	}
 	
-	public Material getDetonaterMaterial(World w)
+	public Material getDetonatorMaterial(World w)
 	{
 		YamlConfiguration conf = this.getConfig(w);
 		if(conf != null)

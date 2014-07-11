@@ -28,7 +28,7 @@ import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
 import TobleMiner.MineFight.Util.Util;
 import TobleMiner.MineFight.Weapon.Weapon;
 import TobleMiner.MineFightWeapons.Main;
-import TobleMiner.MineFightWeapons.Weapons.Stationary.WpC4;
+import TobleMiner.MineFightWeapons.Weapons.Explosive.WpC4;
 
 public class C4 implements Weapon
 {
@@ -68,8 +68,8 @@ public class C4 implements Weapon
 				return;
 			Action action = pie.getAction();
 			Debugger.writeDebugOut(String.format("Hand: %s:%d", inHand.getType().toString(), inHand.getDurability()));
-			Debugger.writeDebugOut(String.format("Detonator: %s:%d", Main.config.c4.getDetonaterMaterial(w).toString(), Main.config.c4.getDetonatorSubId(w)));
-			if(inHand.getType() == Main.config.c4.getDetonaterMaterial(w) && inHand.getDurability() == Main.config.c4.getDetonatorSubId(w))
+			Debugger.writeDebugOut(String.format("Detonator: %s:%d", Main.config.c4.getDetonatorMaterial(w).toString(), Main.config.c4.getDetonatorSubId(w)));
+			if(inHand.getType() == Main.config.c4.getDetonatorMaterial(w) && inHand.getDurability() == Main.config.c4.getDetonatorSubId(w))
 			{
 				if(action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)
 				{
