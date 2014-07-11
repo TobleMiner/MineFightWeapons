@@ -8,7 +8,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class ConfC4 extends ConfExplosive
 {
-
 	public ConfC4(File confdir, boolean forceReset) 
 	{
 		super(confdir, forceReset);
@@ -35,7 +34,7 @@ public class ConfC4 extends ConfExplosive
 		YamlConfiguration conf = this.getConfig(w);
 		if(conf != null)
 		{
-			String matname = conf.getString("canEnemyPickup", "invalid");
+			String matname = conf.getString("detonator", "invalid");
 			Material mat = Material.getMaterial(matname);
 			if(mat != null)
 				return mat;
