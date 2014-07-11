@@ -50,7 +50,7 @@ public class Claymore implements Weapon
 		if(event instanceof PlayerDropItemEvent)
 		{
 			PlayerDropItemEvent pdie = (PlayerDropItemEvent)event;
-			if(pdie.getItemDrop().getItemStack().getType() != this.getMaterial(m.getWorld()))
+			if(pdie.getItemDrop().getItemStack().getType() != this.getMaterial(m.getWorld()) || pdie.getItemDrop().getItemStack().getDurability() != this.getSubId(m.getWorld()))
 				return;
 			Debugger.writeDebugOut("Clay dropped by " + pdie.getPlayer().getName());
 			PVPPlayer player = m.getPlayerExact(pdie.getPlayer());
