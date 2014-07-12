@@ -1,4 +1,4 @@
-package TobleMiner.MineFightWeapons.Weapons.Stationary;
+package TobleMiner.MineFightWeapons.Weapons.Explosive;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Item;

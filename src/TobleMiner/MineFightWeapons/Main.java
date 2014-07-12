@@ -11,6 +11,8 @@ import TobleMiner.MineFightWeapons.Config.Conf;
 import TobleMiner.MineFightWeapons.Language.Langfile;
 import TobleMiner.MineFightWeapons.Weapons.Definitions.C4;
 import TobleMiner.MineFightWeapons.Weapons.Definitions.Claymore;
+import TobleMiner.MineFightWeapons.Weapons.Definitions.Frag;
+import TobleMiner.MineFightWeapons.Weapons.Definitions.Turret;
 
 public class Main extends JavaPlugin
 {
@@ -30,10 +32,14 @@ public class Main extends JavaPlugin
 		api.addTranslations(lf.getLangWeapons());
 		Claymore clay = new Claymore();
 		C4 c4 = new C4();
+		Turret turret = new Turret();
+		Frag frag = new Frag();
 		for(World w : api.getKnownWorlds())
 		{
 			api.registerWeapon(clay, w);
 			api.registerWeapon(c4, w);
+			api.registerWeapon(turret, w);
+			api.registerWeapon(frag, w);
 		}
 	}
 	

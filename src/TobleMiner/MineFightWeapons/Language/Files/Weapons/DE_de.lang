@@ -1,2 +1,6 @@
 claymore="AP MINE"
 c4="C4"
+turret="TURRET"
+sentry_missile="Raketen verbraucht!"
+sentry_ammo="Munition verbraucht!"
+frag="Splittergranate"

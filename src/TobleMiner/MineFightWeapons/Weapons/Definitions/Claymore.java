@@ -24,7 +24,7 @@ import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
 import TobleMiner.MineFight.Util.SyncDerp.EntitySyncCalls;
 import TobleMiner.MineFight.Weapon.Weapon;
 import TobleMiner.MineFightWeapons.Main;
-import TobleMiner.MineFightWeapons.Weapons.Stationary.WpClaymore;
+import TobleMiner.MineFightWeapons.Weapons.Explosive.WpClaymore;
 
 public class Claymore implements Weapon
 {
@@ -144,6 +144,7 @@ public class Claymore implements Weapon
 				{
 					Debugger.writeDebugOut("Claymore damaged by explosion. Exploding.");
 					clay.explode();
+					this.remove(clay);
 					return;
 				}
 			}
@@ -271,5 +272,4 @@ public class Claymore implements Weapon
 		this.claymorsByMatch.get(clay.owner.getMatch()).remove(clay);
 		this.claymorsByPlayer.get(clay.owner).remove(clay);
 	}
-
 }

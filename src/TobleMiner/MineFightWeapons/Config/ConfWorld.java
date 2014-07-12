@@ -10,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import TobleMiner.MineFight.Debug.Debugger;
 import TobleMiner.MineFight.Util.IO.File.FileUtil;
 import TobleMiner.MineFightWeapons.Main;
 
@@ -27,6 +28,7 @@ public abstract class ConfWorld
 			File confFile = new File(worlddir, this.getFilename());
 			if(!confFile.exists())
 			{
+				Debugger.writeDebugOut(String.format("Config '%s' doesn't exist. Creating...", confFile.getAbsoluteFile()));
 				this.initConfig(confFile);
 			}
 			YamlConfiguration worldConf = new YamlConfiguration();

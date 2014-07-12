@@ -1,2 +1,6 @@
 claymore="CLAYMORE"
 c4="C4"
+turret="TURRET"
+sentry_missile="No more missiles available!"
+sentry_ammo="Your sentry is out of ammo!"
+frag="FRAG GRENADE"

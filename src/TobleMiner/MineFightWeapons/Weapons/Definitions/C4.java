@@ -94,7 +94,7 @@ public class C4 implements Weapon
 						this.c4sByMatch.get(m).add(c4);
 						if(this.c4sByPlayer.get(player).size() > Main.config.c4.getLimit(m.getWorld()))
 						{
-							List<WpC4> c4s = this.c4sByPlayer.get(player);
+							List<WpC4> c4s = new ArrayList<>(this.c4sByPlayer.get(player));
 							if(c4s.size() > 0)
 							{
 								WpC4 tc4 = c4s.get(0);
@@ -132,7 +132,7 @@ public class C4 implements Weapon
 			this.c4sByPlayer.get(player).add(c4);
 			this.c4sByItem.put(item, c4);
 			this.c4sByMatch.get(m).add(c4);
-			if(this.c4sByPlayer.get(player).size() >= Main.config.c4.getLimit(m.getWorld()))
+			if(this.c4sByPlayer.get(player).size() > Main.config.c4.getLimit(m.getWorld()))
 			{
 				List<WpC4> c4s = new ArrayList<>(this.c4sByPlayer.get(player));
 				if(c4s.size() > 0)
@@ -198,6 +198,7 @@ public class C4 implements Weapon
 				{
 					Debugger.writeDebugOut("c4 damaged by explosion. Exploding.");
 					c4.explode();
+					this.remove(c4);
 					return;
 				}
 			}
@@ -299,7 +300,7 @@ public class C4 implements Weapon
 	public void onTeamchange(Match m, PVPPlayer player)
 	{
 		Debugger.writeDebugOut("Removing c4 due to teamchange: " + player.thePlayer.getName());
-		List<WpC4> c4s = this.c4sByPlayer.get(player);
+		List<WpC4> c4s = new ArrayList<>(this.c4sByPlayer.get(player));
 		for(WpC4 c4 : c4s)
 		{
 			this.remove(c4);
