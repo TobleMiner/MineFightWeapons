@@ -290,7 +290,9 @@ public class C4 implements Weapon
 		List<WpC4> c4s = c4sByPlayer.get(player);
 		for(WpC4 c4 : c4s)
 		{
-			c4sByItem.remove(c4.item);
+			if(c4.item != null)
+				c4sByItem.remove(c4.item);
+			c4.remove();
 			c4sByMatch.get(m).remove(c4);
 		}
 		c4sByPlayer.remove(player);
