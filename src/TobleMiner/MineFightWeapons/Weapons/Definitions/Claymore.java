@@ -17,7 +17,7 @@ import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
-import TobleMiner.MineFight.API.MineFightAPI;
+import TobleMiner.MineFight.API.MineFightWeaponAPI;
 import TobleMiner.MineFight.Debug.Debugger;
 import TobleMiner.MineFight.GameEngine.Match.Match;
 import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
@@ -61,7 +61,7 @@ public class Claymore implements Weapon
 				return;
 			}
 			Item item = pdie.getItemDrop();
-			if(MineFightAPI.instance.getProtections().isLocProtected(item.getLocation()) && !Main.config.claymore.ignoreProtection(item.getWorld()))
+			if(MineFightWeaponAPI.instance.getProtections().isLocProtected(item.getLocation()) && !Main.config.claymore.ignoreProtection(item.getWorld()))
 			{
 				Debugger.writeDebugOut("Claymore not created: Area protected: " + pdie.getPlayer().getName());
 				pdie.setCancelled(true);

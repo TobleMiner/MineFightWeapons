@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import TobleMiner.MineFight.API.MineFightAPI;
+import TobleMiner.MineFight.API.MineFightWeaponAPI;
 import TobleMiner.MineFight.ErrorHandling.Logger;
 import TobleMiner.MineFightWeapons.Config.Conf;
 import TobleMiner.MineFightWeapons.Language.Langfile;
@@ -17,14 +17,14 @@ import TobleMiner.MineFightWeapons.Weapons.Definitions.Turret;
 
 public class Main extends JavaPlugin
 {
-	public static MineFightAPI api;
+	public static MineFightWeaponAPI api;
 	public static Logger logger;
 	public static Conf config;
 		
 	@Override
 	public void onEnable()
 	{
-		api = MineFightAPI.instance;
+		api = MineFightWeaponAPI.instance;
 		logger = api.getLogger(this);
 		logger.log(Level.INFO, "MineFightWeapons enabled");
 		config = new Conf(this.getDataFolder());
@@ -38,11 +38,11 @@ public class Main extends JavaPlugin
 		RPG rpg = new RPG();
 		for(World w : api.getKnownWorlds())
 		{
-			api.registerWeapon(clay, w);
-			api.registerWeapon(c4, w);
-			api.registerWeapon(turret, w);
-			api.registerWeapon(frag, w);
-			api.registerWeapon(rpg, w);
+			if(config.claymore.isEnabled(w)) api.registerWeapon(clay, w);
+			if(config.c4.isEnabled(w)) api.registerWeapon(c4, w);
+			if(config.turret.isEnabled(w)) api.registerWeapon(turret, w);
+			if(config.frag.isEnabled(w)) api.registerWeapon(frag, w);
+			if(config.rpg.isEnabled(w)) api.registerWeapon(rpg, w);
 		}
 	}
 	

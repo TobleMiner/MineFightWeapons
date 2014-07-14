@@ -21,7 +21,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import TobleMiner.MineFight.API.MineFightAPI;
+import TobleMiner.MineFight.API.MineFightWeaponAPI;
 import TobleMiner.MineFight.Debug.Debugger;
 import TobleMiner.MineFight.GameEngine.Match.Match;
 import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
@@ -167,7 +167,7 @@ public class Turret implements Weapon
 				return;
 			}
 			Block b = bpe.getBlock();
-			if(MineFightAPI.instance.getProtections().isBlockProtected(b) && !Main.config.c4.ignoreProtection(b.getWorld()))
+			if(MineFightWeaponAPI.instance.getProtections().isBlockProtected(b) && !Main.config.c4.ignoreProtection(b.getWorld()))
 			{
 				Debugger.writeDebugOut("Turret not created: Area protected: " + bpe.getPlayer().getName());
 				bpe.setCancelled(true);

@@ -21,7 +21,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-import TobleMiner.MineFight.API.MineFightAPI;
+import TobleMiner.MineFight.API.MineFightWeaponAPI;
 import TobleMiner.MineFight.Debug.Debugger;
 import TobleMiner.MineFight.GameEngine.Match.Match;
 import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
@@ -121,7 +121,7 @@ public class C4 implements Weapon
 				return;
 			}
 			Item item = pdie.getItemDrop();
-			if(MineFightAPI.instance.getProtections().isLocProtected(item.getLocation()) && !Main.config.c4.ignoreProtection(item.getWorld()))
+			if(MineFightWeaponAPI.instance.getProtections().isLocProtected(item.getLocation()) && !Main.config.c4.ignoreProtection(item.getWorld()))
 			{
 				Debugger.writeDebugOut("c4 not created: Area protected: " + pdie.getPlayer().getName());
 				pdie.setCancelled(true);
