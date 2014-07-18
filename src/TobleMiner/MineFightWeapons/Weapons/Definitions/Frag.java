@@ -107,7 +107,6 @@ public class Frag implements Weapon
 			EntityDamageEvent ede = (EntityDamageEvent)event;
 			if(ede.getEntity() instanceof Item)
 			{
-				Debugger.writeDebugOut("Item damaged: ");
 				Item item = (Item)ede.getEntity();
 				if(item.getItemStack().getType() != this.getMaterial(m.getWorld()))
 					return;

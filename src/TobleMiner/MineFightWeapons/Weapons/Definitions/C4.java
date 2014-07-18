@@ -67,8 +67,6 @@ public class C4 implements Weapon
 			if(inHand == null)
 				return;
 			Action action = pie.getAction();
-			Debugger.writeDebugOut(String.format("Hand: %s:%d", inHand.getType().toString(), inHand.getDurability()));
-			Debugger.writeDebugOut(String.format("Detonator: %s:%d", Main.config.c4.getDetonatorMaterial(w).toString(), Main.config.c4.getDetonatorSubId(w)));
 			if(inHand.getType() == Main.config.c4.getDetonatorMaterial(w) && inHand.getDurability() == Main.config.c4.getDetonatorSubId(w))
 			{
 				if(action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)
@@ -185,7 +183,6 @@ public class C4 implements Weapon
 			EntityDamageEvent ede = (EntityDamageEvent)event;
 			if(ede.getEntity() instanceof Item)
 			{
-				Debugger.writeDebugOut("Item damaged: ");
 				Item item = (Item)ede.getEntity();
 				if(item.getItemStack().getType() != this.getMaterial(m.getWorld()))
 					return;

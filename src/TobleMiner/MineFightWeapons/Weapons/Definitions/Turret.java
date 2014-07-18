@@ -65,8 +65,6 @@ public class Turret implements Weapon
 			if(inHand == null)
 				return;
 			Action action = pie.getAction();
-			Debugger.writeDebugOut(String.format("Hand: %s:%d", inHand.getType().toString(), inHand.getDurability()));
-			Debugger.writeDebugOut(String.format("Controller: %s:%d", Main.config.turret.getControllerMaterial(w).toString(), Main.config.turret.getControllerSubId(w)));
 			if(inHand.getType() == Main.config.turret.getControllerMaterial(w) && inHand.getDurability() == Main.config.turret.getControllerSubId(w))
 			{
 				HashSet<Byte> trans = new HashSet<Byte>();
@@ -111,7 +109,6 @@ public class Turret implements Weapon
 			if(edbe.getEntity() instanceof Player && edbe.getDamager() instanceof Arrow)
 			{
 				Player p = (Player)edbe.getEntity();
-				Debugger.writeDebugOut("Player damaged by arrow: " + p.getName());
 				PVPPlayer player = m.getPlayerExact(p);
 				if(player == null || !player.isSpawned())
 				{
