@@ -65,7 +65,7 @@ public class ModuleMFW extends CommandModule
 	
 	private enum CommandMFWAdmin implements CommandHelp
 	{
-		RELOAD("admin", "reload", 0, 0, "cmdDescrMFWReload", "/mpvp mfw reload", Permission.MPVP_MFW_RELOAD.toString());
+		RELOAD("mfw", "reload", 0, 0, "cmdDescrMFWReload", "/mpvp mfw reload", Permission.MPVP_MFW_RELOAD.toString());
 
 		public final String module;
 		public final String cmd;
