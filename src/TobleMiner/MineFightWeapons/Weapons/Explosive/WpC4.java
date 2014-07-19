@@ -5,9 +5,11 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.material.MaterialData;
+import org.bukkit.util.Vector;
 
 import TobleMiner.MineFight.GameEngine.Match.Match;
 import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
+import TobleMiner.MineFight.Protection.Area3D;
 import TobleMiner.MineFight.Util.SyncDerp.EntitySyncCalls;
 import TobleMiner.MineFightWeapons.Main;
 
@@ -21,6 +23,7 @@ public class WpC4
 	private MaterialData blockDataStore;
 	private final boolean damageEnviron;
 	private boolean exploded = false;
+	private final Area3D area;
 	
 	public WpC4(Block b, Item i, PVPPlayer owner, Match match)
 	{
@@ -35,6 +38,18 @@ public class WpC4
 		this.match = match;
 		this.item = i;
 		this.damageEnviron = match.canEnvironmentBeDamaged();
+		float dist = Main.config.c4.getBlastPower(this.match.getWorld());
+		Vector vec = new Vector(dist, dist, dist);
+		if(this.item != null)
+		{
+			this.area = new Area3D(this.item, vec, vec.clone().multiply(-1d));
+		}
+		else
+		{
+			Location loc = this.block.getLocation();
+			this.area = new Area3D(loc.clone().add(vec.clone().multiply(-1d)), loc.clone().add(vec.clone()));			
+		}
+		match.registerDangerZone(area);
 	}
 	
 	public void remove()
@@ -48,6 +63,7 @@ public class WpC4
 		{
 			EntitySyncCalls.removeEntity(item);
 		}
+		this.match.unregisterDangerZone(area);
 	}
 	
 	public void explode()
@@ -79,7 +95,7 @@ public class WpC4
 		{
 			Location loc = this.item.getLocation().clone();
 			EntitySyncCalls.removeEntity(item);
-			match.createExplosion(exploder, loc, Main.config.claymore.getBlastPower(this.match.getWorld()), this.getLocName());
+			match.createExplosion(exploder, loc, Main.config.c4.getBlastPower(this.match.getWorld()), this.getLocName());
 		}
 	}
 	

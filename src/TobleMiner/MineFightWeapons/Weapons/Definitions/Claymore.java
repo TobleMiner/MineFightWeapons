@@ -80,6 +80,7 @@ public class Claymore implements Weapon
 					WpClaymore tclay = clays.get(0);
 					EntitySyncCalls.removeEntity(tclay.claymore);
 					this.remove(tclay);
+					tclay.remove();
 				}
 			}
 			pdie.setCancelled(false);
@@ -106,6 +107,7 @@ public class Claymore implements Weapon
 				{
 					Debugger.writeDebugOut(String.format("%s is picking a hostile claymore.", ppie.getPlayer().getName()));
 					this.remove(clay);
+					clay.remove();
 					ppie.setCancelled(false);
 				}
 				else if(m.canKill(clay.owner, player))
@@ -113,6 +115,7 @@ public class Claymore implements Weapon
 					Debugger.writeDebugOut(String.format("%s is near a hostile claymore. That's going to hurt.", ppie.getPlayer().getName()));
 					this.remove(clay);
 					clay.explode();
+					clay.remove();
 				}
 			}
 			else
@@ -122,6 +125,7 @@ public class Claymore implements Weapon
 				{
 					Debugger.writeDebugOut(String.format("%s is picking up his claymore.", ppie.getPlayer().getName()));
 					this.remove(clay);
+					clay.remove();
 					ppie.setCancelled(false);
 				}
 			}
@@ -144,6 +148,7 @@ public class Claymore implements Weapon
 					Debugger.writeDebugOut("Claymore damaged by explosion. Exploding.");
 					clay.explode();
 					this.remove(clay);
+					clay.remove();
 					return;
 				}
 			}
@@ -192,6 +197,7 @@ public class Claymore implements Weapon
 			for(WpClaymore clay : clays)
 			{
 				this.remove(clay);
+				clay.remove();
 				EntitySyncCalls.removeEntity(clay.claymore);
 			}
 		}
@@ -249,6 +255,7 @@ public class Claymore implements Weapon
 		for(WpClaymore clay : clays)
 		{
 			this.remove(clay);
+			clay.remove();
 			EntitySyncCalls.removeEntity(clay.claymore);
 		}
 	}
