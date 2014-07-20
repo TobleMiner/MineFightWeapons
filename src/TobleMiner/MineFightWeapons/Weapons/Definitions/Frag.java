@@ -87,9 +87,9 @@ public class Frag implements Weapon
 		else if(event instanceof PlayerPickupItemEvent)
 		{
 			PlayerPickupItemEvent ppie = (PlayerPickupItemEvent)event;
-			ppie.setCancelled(true);
 			if(ppie.getItem().getItemStack().getType() != this.getMaterial(m.getWorld()))
 				return;
+			ppie.setCancelled(true);
 			PVPPlayer player = m.getPlayerExact(ppie.getPlayer());
 			if(player == null || !player.isSpawned())
 			{

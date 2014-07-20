@@ -145,9 +145,9 @@ public class C4 implements Weapon
 		else if(event instanceof PlayerPickupItemEvent)
 		{
 			PlayerPickupItemEvent ppie = (PlayerPickupItemEvent)event;
-			ppie.setCancelled(true);
 			if(ppie.getItem().getItemStack().getType() != this.getMaterial(m.getWorld()))
 				return;
+			ppie.setCancelled(true);
 			PVPPlayer player = m.getPlayerExact(ppie.getPlayer());
 			if(player == null || !player.isSpawned())
 			{
@@ -163,8 +163,8 @@ public class C4 implements Weapon
 				if(player.getTeam() != c4.owner.getTeam() && Main.config.c4.canEnemyPickup(m.getWorld()) && player.thePlayer.isSneaking())
 				{
 					Debugger.writeDebugOut(String.format("%s is picking up a hostile c4.", ppie.getPlayer().getName()));
-					this.remove(c4);
 					ppie.setCancelled(false);
+					this.remove(c4);
 				}
 			}
 			else
@@ -173,8 +173,8 @@ public class C4 implements Weapon
 				if(player.thePlayer.isSneaking() && Main.config.c4.canOwnerPickup(m.getWorld()))
 				{
 					Debugger.writeDebugOut(String.format("%s is picking up his c4.", ppie.getPlayer().getName()));
-					this.remove(c4);
 					ppie.setCancelled(false);
+					this.remove(c4);
 				}
 			}
 		}
