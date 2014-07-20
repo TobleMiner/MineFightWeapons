@@ -82,7 +82,10 @@ public class Turret implements Weapon
 						{
 							Arrow arr = turret.shoot(b.getLocation());
 							if(arr != null)
+							{
 								this.turretByProjectile.put(arr, turret);
+								m.registerProjectile(arr);
+							}
 							else
 								turret.getOwner().thePlayer.sendMessage(ChatColor.RED + TobleMiner.MineFight.Main.gameEngine.dict.get("sentry_ammo"));
 						}
@@ -120,6 +123,7 @@ public class Turret implements Weapon
 				WpTurret turret = this.turretByProjectile.remove(arr);
 				if(turret == null)
 					return;
+				m.unregisterProjectile(arr);
 				if(m.canKill(turret.getOwner(), player))
 				{
 					player.normalDeathBlocked = true;
@@ -144,7 +148,10 @@ public class Turret implements Weapon
 			if(!(proj instanceof Arrow))
 				return;
 			Arrow arr = (Arrow)proj;
-			//this.turretByProjectile.remove(arr);
+			if(this.turretByProjectile.get(arr) != null)
+			{
+				m.unregisterProjectile(arr);
+			}
 			TurretMissile missile = this.missileByProjectile.remove(arr);
 			if(missile == null)
 				return;

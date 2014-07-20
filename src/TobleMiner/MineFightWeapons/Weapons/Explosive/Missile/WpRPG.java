@@ -44,6 +44,7 @@ public class WpRPG extends TickControlledWeapon
 		this.owner = owner;
 		this.manager = manger;
 		this.throttle = Main.config.rpg.getThrottle(w);
+		match.registerProjectile(arr);
 	}
 
 	@Override
@@ -92,6 +93,7 @@ public class WpRPG extends TickControlledWeapon
 	{
 		this.unregisterTickControlled();
 		EntitySyncCalls.removeEntity(this.arr);
+		this.match.unregisterProjectile(this.arr);
 	}
 	
 	public String getLocName()

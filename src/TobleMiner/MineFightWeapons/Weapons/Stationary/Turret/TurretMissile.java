@@ -30,6 +30,7 @@ public class TurretMissile extends TickControlledWeapon
 		this.exploStr = exploStr;
 		this.arr = arr;
 		this.speed = speed;
+		match.registerProjectile(arr);
 	}
 
 	@Override
@@ -57,6 +58,12 @@ public class TurretMissile extends TickControlledWeapon
 	{
 		this.unregisterTickControlled();
 		match.createExplosion(turret.getOwner(), arr.getLocation(), exploStr, turret.getLocName());
+		this.remove();
+	}
+	
+	public void remove()
+	{
+		this.match.unregisterProjectile(this.arr);
 		EntitySyncCalls.removeEntity(this.arr);
 	}
 	
