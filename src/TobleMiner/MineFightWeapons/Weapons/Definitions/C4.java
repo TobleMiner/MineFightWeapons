@@ -100,6 +100,8 @@ public class C4 implements Weapon
 								this.remove(tc4);
 							}
 						}
+						player.thePlayer.getInventory().removeItem(new ItemStack(this.getMaterial(m.getWorld()), 1, this.getSubId(m.getWorld())));
+						player.thePlayer.updateInventory();
 						pie.setCancelled(true);
 					}
 				}
