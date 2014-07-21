@@ -49,6 +49,6 @@ public abstract class ConfWeapon  extends ConfWorld
 		{
 			return conf.getBoolean("enabled", true);
 		}
-		return true;
+		return false;
 	}
 }
