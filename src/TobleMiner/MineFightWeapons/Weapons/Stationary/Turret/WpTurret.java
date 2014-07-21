@@ -88,6 +88,6 @@ public class WpTurret
 	
 	public String getLocName()
 	{
-		return TobleMiner.MineFight.Main.gameEngine.dict.get("turret");
+		return Main.langapi.localize("turret");
 	}
 }

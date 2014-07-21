@@ -13,6 +13,7 @@ import TobleMiner.MineFightWeapons.Config.Weapon.Explosive.ConfC4;
 import TobleMiner.MineFightWeapons.Config.Weapon.Explosive.ConfClaymore;
 import TobleMiner.MineFightWeapons.Config.Weapon.Explosive.ConfFrag;
 import TobleMiner.MineFightWeapons.Config.Weapon.Explosive.Missile.ConfRPG;
+import TobleMiner.MineFightWeapons.Config.Weapon.Stationary.ConfIMS;
 import TobleMiner.MineFightWeapons.Config.Weapon.Stationary.ConfTurret;
 
 public class Conf
@@ -24,6 +25,7 @@ public class Conf
 	public ConfTurret turret;
 	public ConfFrag frag;
 	public ConfRPG rpg;
+	public ConfIMS ims;
 	
 	public Conf(File plugindir)
 	{
@@ -54,6 +56,7 @@ public class Conf
 			this.turret = new ConfTurret(confdir, resetAll);
 			this.frag = new ConfFrag(confdir, resetAll);
 			this.rpg = new ConfRPG(confdir, resetAll);
+			this.ims = new ConfIMS(confdir, resetAll);
 		}
 		catch(Exception ex)
 		{

@@ -101,6 +101,6 @@ public class WpC4
 	
 	public String getLocName()
 	{
-		return TobleMiner.MineFight.Main.gameEngine.dict.get("c4");
+		return Main.langapi.localize("c4");
 	}
 }

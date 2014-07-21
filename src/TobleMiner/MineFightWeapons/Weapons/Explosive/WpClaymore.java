@@ -45,6 +45,6 @@ public class WpClaymore
 	
 	public String getLocName()
 	{
-		return TobleMiner.MineFight.Main.gameEngine.dict.get("claymore");
+		return Main.langapi.localize("claymore");
 	}
 }

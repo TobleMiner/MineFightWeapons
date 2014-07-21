@@ -66,6 +66,6 @@ public class WpFrag extends TickControlledWeapon
 	
 	public String getLocName()
 	{
-		return TobleMiner.MineFight.Main.gameEngine.dict.get("frag");
+		return Main.langapi.localize("frag");
 	}
 }

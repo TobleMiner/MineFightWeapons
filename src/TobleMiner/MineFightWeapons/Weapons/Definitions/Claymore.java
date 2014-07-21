@@ -17,7 +17,6 @@ import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
-import TobleMiner.MineFight.API.MineFightWeaponAPI;
 import TobleMiner.MineFight.Debug.Debugger;
 import TobleMiner.MineFight.GameEngine.Match.Match;
 import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
@@ -61,7 +60,7 @@ public class Claymore implements Weapon
 				return;
 			}
 			Item item = pdie.getItemDrop();
-			if(MineFightWeaponAPI.instance.getProtections().isLocProtected(item.getLocation()) && !Main.config.claymore.ignoreProtection(item.getWorld()))
+			if(Main.papi.getProtections().isLocProtected(item.getLocation()) && !Main.config.claymore.ignoreProtection(item.getWorld()))
 			{
 				Debugger.writeDebugOut("Claymore not created: Area protected: " + pdie.getPlayer().getName());
 				pdie.setCancelled(true);
@@ -110,7 +109,7 @@ public class Claymore implements Weapon
 					clay.remove();
 					ppie.setCancelled(false);
 				}
-				else if(m.canKill(clay.owner, player))
+				else if(m.canKill(clay.owner, player, true))
 				{
 					Debugger.writeDebugOut(String.format("%s is near a hostile claymore. That's going to hurt.", ppie.getPlayer().getName()));
 					this.remove(clay);

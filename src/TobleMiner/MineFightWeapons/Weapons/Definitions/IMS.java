@@ -20,16 +20,15 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import TobleMiner.MineFight.Debug.Debugger;
 import TobleMiner.MineFight.GameEngine.Match.Match;
 import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
-import TobleMiner.MineFight.Util.SyncDerp.EntitySyncCalls;
 import TobleMiner.MineFight.Weapon.Weapon;
 import TobleMiner.MineFightWeapons.Main;
-import TobleMiner.MineFightWeapons.Weapons.Explosive.WpFrag;
+import TobleMiner.MineFightWeapons.Weapons.Stationary.IMS.WpIMS;
 
-public class Frag implements Weapon
+public class IMS implements Weapon
 {
-	private HashMap<Match, List<WpFrag>> fragsByMatch = new HashMap<>();
-	private HashMap<Item, WpFrag> fragsByItem = new HashMap<>();
-	private HashMap<PVPPlayer, List<WpFrag>> fragsByPlayer = new HashMap<>();
+	private HashMap<Match, List<WpIMS>> imssByMatch = new HashMap<>();
+	private HashMap<Item, WpIMS> imsByItem = new HashMap<>();
+	private HashMap<PVPPlayer, List<WpIMS>> imssByPlayer = new HashMap<>();
 		
 	@Override
 	public void getRequiredEvents(List<Class<?>> events)
@@ -46,41 +45,41 @@ public class Frag implements Weapon
 	@Override
 	public void onEvent(Match m, Event event)
 	{
-		World w = m.getWorld();
 		if(event instanceof PlayerDropItemEvent)
 		{
 			PlayerDropItemEvent pdie = (PlayerDropItemEvent)event;
 			if(pdie.getItemDrop().getItemStack().getType() != this.getMaterial(m.getWorld()) || pdie.getItemDrop().getItemStack().getDurability() != this.getSubId(m.getWorld()))
 				return;
-			Debugger.writeDebugOut("frag dropped by " + pdie.getPlayer().getName());
+			Debugger.writeDebugOut("ims dropped by " + pdie.getPlayer().getName());
 			PVPPlayer player = m.getPlayerExact(pdie.getPlayer());
 			if(player == null || !player.isSpawned())
 			{
-				Debugger.writeDebugOut("frag not created: Player not spawned: " + pdie.getPlayer().getName());
+				Debugger.writeDebugOut("ims not created: Player not spawned: " + pdie.getPlayer().getName());
 				pdie.setCancelled(true);
 				return;
 			}
 			Item item = pdie.getItemDrop();
-			if(Main.papi.getProtections().isLocProtected(item.getLocation()) && !Main.config.frag.ignoreProtection(item.getWorld()))
+			if(Main.papi.getProtections().isLocProtected(item.getLocation()) && !Main.config.ims.ignoreProtection(item.getWorld()))
 			{
-				Debugger.writeDebugOut("frag not created: Area protected: " + pdie.getPlayer().getName());
+				Debugger.writeDebugOut("ims not created: Area protected: " + pdie.getPlayer().getName());
 				pdie.setCancelled(true);
 				return;
 			}
-			Debugger.writeDebugOut("frag created: " + pdie.getPlayer().getName());
-			float speed = (float)Main.config.frag.getThrowSpeed(w);
-			if(player.thePlayer.isSneaking())
+			Debugger.writeDebugOut("ims created: " + pdie.getPlayer().getName());
+			WpIMS ims = new WpIMS(m, item, player);
+			this.imssByPlayer.get(player).add(ims);
+			this.imsByItem.put(item, ims);
+			this.imssByMatch.get(m).add(ims);
+			if(this.imssByPlayer.get(player).size() > Main.config.ims.getLimit(m.getWorld()))
 			{
-				speed = (float)Main.config.frag.getThrowSpeedSneak(w);
+				List<WpIMS> imss = new ArrayList<>(this.imssByPlayer.get(player));
+				if(imss.size() > 0)
+				{
+					WpIMS tims = imss.get(0);
+					tims.remove();
+					this.remove(tims);
+				}
 			}
-			else if(player.thePlayer.isSprinting())
-			{
-				speed = (float)Main.config.frag.getThrowSpeedSprint(w);
-			}
-			WpFrag frag = new WpFrag(item, player, m, this, speed);
-			this.fragsByPlayer.get(player).add(frag);
-			this.fragsByItem.put(item, frag);
-			this.fragsByMatch.get(m).add(frag);
 			pdie.setCancelled(false);
 		}
 		else if(event instanceof PlayerPickupItemEvent)
@@ -95,11 +94,23 @@ public class Frag implements Weapon
 				Debugger.writeDebugOut(String.format("%s hasn't spawned. No pickup.", ppie.getPlayer().getName()));
 				return;
 			}
-			WpFrag frag = this.fragsByItem.get(ppie.getItem());
-			if(frag == null)
+			WpIMS ims = this.imsByItem.get(ppie.getItem());
+			if(ims == null)
 				return;
-			Debugger.writeDebugOut(String.format("%s is trying to pick up a frag: Owner: %s", ppie.getPlayer().getName(), frag.owner.thePlayer.getName()));
-			ppie.setCancelled(true);
+			Debugger.writeDebugOut(String.format("%s is trying to pickup ims: Owner: %s", ppie.getPlayer().getName(), ims.owner.thePlayer.getName()));
+			if(player != ims.owner)
+			{
+				if(player.getTeam() != ims.owner.getTeam() && Main.config.ims.canEnemyPickup(m.getWorld()) && player.thePlayer.isSneaking())
+				{
+					Debugger.writeDebugOut(String.format("%s is picking up a hostile ims.", ppie.getPlayer().getName()));
+					ppie.setCancelled(false);
+					this.remove(ims);
+				}
+			}
+			else
+			{
+				Debugger.writeDebugOut(String.format("%s found his own ims.", ppie.getPlayer().getName()));
+			}
 		}
 		else if(event instanceof EntityDamageEvent)
 		{
@@ -109,16 +120,16 @@ public class Frag implements Weapon
 				Item item = (Item)ede.getEntity();
 				if(item.getItemStack().getType() != this.getMaterial(m.getWorld()))
 					return;
-				WpFrag frag = this.fragsByItem.get(item);
-				if(frag == null)
+				WpIMS ims = this.imsByItem.get(item);
+				if(ims == null)
 					return;
-				Debugger.writeDebugOut("frag damaged");
+				Debugger.writeDebugOut("ims damaged");
 				ede.setCancelled(true);
 				if(ede.getCause() == DamageCause.BLOCK_EXPLOSION || ede.getCause() == DamageCause.ENTITY_EXPLOSION)
 				{
-					Debugger.writeDebugOut("frag damaged by explosion. Exploding.");
-					frag.explode();
-					this.remove(frag);
+					Debugger.writeDebugOut("ims damaged by explosion. Exploding.");
+					this.remove(ims);
+					ims.remove();
 					return;
 				}
 			}
@@ -131,11 +142,11 @@ public class Frag implements Weapon
 				Item item = (Item)ice.getEntity();
 				if(item.getItemStack().getType() != this.getMaterial(m.getWorld()))
 					return;
-				WpFrag frag = this.fragsByItem.get(item);
-				if(frag == null)
+				WpIMS ims = this.imsByItem.get(item);
+				if(ims == null)
 					return;
 				ice.setCancelled(true);
-				frag.explode();
+				ims.remove();
 				return;
 			}
 		}
@@ -145,8 +156,8 @@ public class Frag implements Weapon
 			Item item = (Item)ide.getEntity();
 			if(item.getItemStack().getType() != this.getMaterial(m.getWorld()))
 				return;
-			WpFrag frag = this.fragsByItem.get(item);
-			if(frag == null)
+			WpIMS ims = this.imsByItem.get(item);
+			if(ims == null)
 				return;
 			ide.setCancelled(true);
 		}
@@ -161,13 +172,13 @@ public class Frag implements Weapon
 	@Override
 	public void onDeath(Match m, PVPPlayer killed, PVPPlayer killer) 
 	{
-		if(Main.config.frag.despawnOnDeath(m.getWorld()))
+		if(Main.config.ims.despawnOnDeath(m.getWorld()))
 		{
-			List<WpFrag> frags = new ArrayList<>(this.fragsByPlayer.get(killed));
-			for(WpFrag frag : frags)
+			List<WpIMS> imss = new ArrayList<>(this.imssByPlayer.get(killed));
+			for(WpIMS ims : imss)
 			{
-				this.remove(frag);
-				EntitySyncCalls.removeEntity(frag.item);
+				this.remove(ims);
+				ims.remove();
 			}
 		}
 	}
@@ -181,13 +192,13 @@ public class Frag implements Weapon
 	@Override
 	public void matchCreated(Match m) 
 	{
-		fragsByMatch.put(m, new ArrayList<WpFrag>());
+		imssByMatch.put(m, new ArrayList<WpIMS>());
 	}
 
 	@Override
 	public void matchEnded(Match m) 
 	{
-		fragsByMatch.remove(m);
+		imssByMatch.remove(m);
 	}
 
 	@Override
@@ -199,51 +210,52 @@ public class Frag implements Weapon
 	@Override
 	public void onJoin(Match m, PVPPlayer player) 
 	{
-		Debugger.writeDebugOut("Creating frag-entry for " + player.thePlayer.getName());
-		fragsByPlayer.put(player, new ArrayList<WpFrag>());
+		Debugger.writeDebugOut("Creating ims-entry for " + player.thePlayer.getName());
+		imssByPlayer.put(player, new ArrayList<WpIMS>());
 	}
 
 	@Override
 	public void onLeave(Match m, PVPPlayer player) 
 	{
-		Debugger.writeDebugOut("Removing frag-entry for " + player.thePlayer.getName());
-		List<WpFrag> frags = new ArrayList<>(this.fragsByPlayer.get(player));
-		for(WpFrag frag : frags)
+		Debugger.writeDebugOut("Removing ims-entry for " + player.thePlayer.getName());
+		List<WpIMS> imss = imssByPlayer.get(player);
+		for(WpIMS ims : imss)
 		{
-			fragsByItem.remove(frag.item);
-			fragsByMatch.get(m).remove(frag);
+			imsByItem.remove(ims.item);
+			ims.remove();
+			imssByMatch.get(m).remove(ims);
 		}
-		fragsByPlayer.remove(player);
+		imssByPlayer.remove(player);
 	}
 
 	@Override
 	public void onTeamchange(Match m, PVPPlayer player)
 	{
-		Debugger.writeDebugOut("Removing fragmors due to teamchange: " + player.thePlayer.getName());
-		List<WpFrag> frags = new ArrayList<>(this.fragsByPlayer.get(player));
-		for(WpFrag frag : frags)
+		Debugger.writeDebugOut("Removing ims due to teamchange: " + player.thePlayer.getName());
+		List<WpIMS> imss = new ArrayList<>(this.imssByPlayer.get(player));
+		for(WpIMS ims : imss)
 		{
-			this.remove(frag);
-			EntitySyncCalls.removeEntity(frag.item);
+			this.remove(ims);
+			ims.remove();
 		}
 	}
 
 	@Override
 	public Material getMaterial(World w)
 	{
-		return Main.config.frag.getMaterial(w);
+		return Main.config.ims.getMaterial(w);
 	}
 
 	@Override
 	public short getSubId(World w) 
 	{
-		return Main.config.frag.getSubid(w);
+		return Main.config.ims.getSubid(w);
 	}
 	
-	public void remove(WpFrag frag) //Used as callback frow WpFrag to remove references to invalid frag
+	private void remove(WpIMS ims)
 	{
-		this.fragsByItem.remove(frag.item);
-		this.fragsByMatch.get(frag.owner.getMatch()).remove(frag);
-		this.fragsByPlayer.get(frag.owner).remove(frag);
+		if(ims.item != null) this.imsByItem.remove(ims.item);
+		this.imssByMatch.get(ims.owner.getMatch()).remove(ims);
+		this.imssByPlayer.get(ims.owner).remove(ims);
 	}
 }
