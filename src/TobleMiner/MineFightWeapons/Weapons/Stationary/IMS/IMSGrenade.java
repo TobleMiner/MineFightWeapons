@@ -54,9 +54,12 @@ public class IMSGrenade extends TickControlledWeapon
 			time += 0.1d;
 			if(time > this.maxLifetime)
 			{
-				this.unregisterTickControlled();
-				EntitySyncCalls.removeEntity(arr);
-				ims.release(this.target);
+				this.remove();
+				return;
+			}
+			if(this.arr.isOnGround() || this.arr.isDead())
+			{
+				this.explode();
 				return;
 			}
 			if(this.arr.getVelocity().getY() < 0d)
@@ -84,5 +87,6 @@ public class IMSGrenade extends TickControlledWeapon
 	{
 		EntitySyncCalls.removeEntity(arr);
 		ims.release(this.target);
+		this.unregisterTickControlled();
 	}
 }
