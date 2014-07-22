@@ -7,7 +7,7 @@ import org.bukkit.util.Vector;
 import TobleMiner.MineFight.GameEngine.GameEngine;
 import TobleMiner.MineFight.GameEngine.Match.Match;
 import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
-import TobleMiner.MineFight.Protection.Area3D;
+import TobleMiner.MineFight.Util.Geometry.Area3D;
 import TobleMiner.MineFight.Util.SyncDerp.EntitySyncCalls;
 import TobleMiner.MineFight.Weapon.TickControlled.TickControlledWeapon;
 import TobleMiner.MineFightWeapons.Main;
