@@ -14,6 +14,7 @@ import org.bukkit.util.Vector;
 import TobleMiner.MineFight.GameEngine.GameEngine;
 import TobleMiner.MineFight.GameEngine.Match.Match;
 import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
+import TobleMiner.MineFight.Protection.Area3D;
 import TobleMiner.MineFight.Util.SyncDerp.EffectSyncCalls;
 import TobleMiner.MineFight.Util.SyncDerp.EntitySyncCalls;
 import TobleMiner.MineFight.Weapon.TickControlled.TickControlledWeapon;
@@ -31,6 +32,7 @@ public class WpIMS extends TickControlledWeapon
 	private double time = 0d;
 	private boolean armed = false;
 	private final double armTime;
+	private final Area3D dzone;
 	
 	public WpIMS(Match match,Item item, PVPPlayer owner)
 	{
@@ -41,6 +43,9 @@ public class WpIMS extends TickControlledWeapon
 		this.triggerDist = Main.config.ims.getTriggerDistance(w);
 		this.projNum = Main.config.ims.getGrenadeAmount(w);
 		this.armTime = Main.config.ims.getArmTime(w);
+		Vector vec = new Vector(triggerDist, triggerDist, triggerDist);
+		this.dzone = new Area3D(item.getLocation().clone().add(vec), item.getLocation().clone().add(vec.clone().multiply(-1d)));
+		match.registerDangerZone(dzone);
 	}
 
 	@Override
@@ -95,6 +100,7 @@ public class WpIMS extends TickControlledWeapon
 	{
 		this.unregisterTickControlled();
 		EntitySyncCalls.removeEntity(item);
+		this.match.unregisterDangerZone(dzone);
 	}
 	
 	public String getLocName()
