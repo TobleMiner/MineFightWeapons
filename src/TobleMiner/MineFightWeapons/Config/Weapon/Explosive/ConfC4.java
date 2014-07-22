@@ -58,9 +58,9 @@ public class ConfC4 extends ConfExplosive
 		YamlConfiguration conf = this.getConfig(w);
 		if(conf != null)
 		{
-			return conf.getBoolean("canEnemyPickup", false);
+			return conf.getBoolean("canEnemyPickup", true);
 		}
-		return false;
+		return true;
 	}
 	
 	public int getLimit(World w)
@@ -78,9 +78,9 @@ public class ConfC4 extends ConfExplosive
 		YamlConfiguration conf = this.getConfig(w);
 		if(conf != null)
 		{
-			return conf.getBoolean("despawnOnDeath", false);
+			return conf.getBoolean("despawnOnDeath", true);
 		}
-		return false;
+		return true;
 	}
 
 	public boolean ignoreProtection(World w)
