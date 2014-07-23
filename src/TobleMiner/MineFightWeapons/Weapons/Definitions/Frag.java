@@ -88,13 +88,6 @@ public class Frag implements Weapon
 			PlayerPickupItemEvent ppie = (PlayerPickupItemEvent)event;
 			if(ppie.getItem().getItemStack().getType() != this.getMaterial(m.getWorld()))
 				return;
-			ppie.setCancelled(true);
-			PVPPlayer player = m.getPlayerExact(ppie.getPlayer());
-			if(player == null || !player.isSpawned())
-			{
-				Debugger.writeDebugOut(String.format("%s hasn't spawned. No pickup.", ppie.getPlayer().getName()));
-				return;
-			}
 			WpFrag frag = this.fragsByItem.get(ppie.getItem());
 			if(frag == null)
 				return;
