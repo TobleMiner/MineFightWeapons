@@ -43,6 +43,7 @@ public class IMSGrenade extends TickControlledWeapon
 		this.target = target;
 		this.maxLifetime = Main.config.ims.getMaxGrenadeLifetime(this.world);
 		this.exploDist = Main.config.ims.getGrenadeExploDist(this.world);
+		match.registerProjectile(arr);
 	}
 
 	@Override
@@ -93,5 +94,6 @@ public class IMSGrenade extends TickControlledWeapon
 		EntitySyncCalls.removeEntity(arr);
 		ims.release(this.target);
 		this.unregisterTickControlled();
+		match.unregisterProjectile(this.arr);
 	}
 }
