@@ -58,14 +58,9 @@ public class IMSGrenade extends TickControlledWeapon
 				this.remove();
 				return;
 			}
-			if(this.arr.isOnGround())
+			if(this.arr.isOnGround() || this.arr.isDead())
 			{
 				this.explode();
-				return;
-			}
-			if(this.arr.isDead())
-			{
-				this.remove();
 				return;
 			}
 			if(this.arr.getVelocity().getY() < 0d)
