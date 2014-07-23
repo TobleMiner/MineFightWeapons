@@ -89,16 +89,17 @@ public class Claymore implements Weapon
 			PlayerPickupItemEvent ppie = (PlayerPickupItemEvent)event;
 			if(ppie.getItem().getItemStack().getType() != this.getMaterial(m.getWorld()))
 				return;
-			ppie.setCancelled(true);
 			PVPPlayer player = m.getPlayerExact(ppie.getPlayer());
 			if(player == null || !player.isSpawned())
 			{
 				Debugger.writeDebugOut(String.format("%s hasn't spawned. No pickup.", ppie.getPlayer().getName()));
+				ppie.setCancelled(true);
 				return;
 			}
 			WpClaymore clay = this.claymorsByItem.get(ppie.getItem());
 			if(clay == null)
 				return;
+			ppie.setCancelled(true);
 			Debugger.writeDebugOut(String.format("%s is trying to pickup a claymore: Owner: %s", ppie.getPlayer().getName(), clay.owner.thePlayer.getName()));
 			if(player != clay.owner)
 			{
