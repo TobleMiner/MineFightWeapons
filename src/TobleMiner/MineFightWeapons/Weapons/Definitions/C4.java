@@ -148,16 +148,17 @@ public class C4 implements Weapon
 			PlayerPickupItemEvent ppie = (PlayerPickupItemEvent)event;
 			if(ppie.getItem().getItemStack().getType() != this.getMaterial(m.getWorld()))
 				return;
-			ppie.setCancelled(true);
 			PVPPlayer player = m.getPlayerExact(ppie.getPlayer());
 			if(player == null || !player.isSpawned())
 			{
+				ppie.setCancelled(true);
 				Debugger.writeDebugOut(String.format("%s hasn't spawned. No pickup.", ppie.getPlayer().getName()));
 				return;
 			}
 			WpC4 c4 = this.c4sByItem.get(ppie.getItem());
 			if(c4 == null)
 				return;
+			ppie.setCancelled(true);
 			Debugger.writeDebugOut(String.format("%s is trying to pickup c4: Owner: %s", ppie.getPlayer().getName(), c4.owner.thePlayer.getName()));
 			if(player != c4.owner)
 			{
