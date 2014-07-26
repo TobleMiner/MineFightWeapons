@@ -4,8 +4,6 @@ description:
 author: Tobias Schramm 'Toble_Miner'
 website:
 depend: [MineFight]
-softdepend: [MineFight]
-database: false
 
 main: TobleMiner.MineFightWeapons.Main
 
