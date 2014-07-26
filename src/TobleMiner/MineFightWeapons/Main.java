@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import TobleMiner.MineFight.API.MineFightAPI;
 import TobleMiner.MineFight.API.MineFightCommandAPI;
+import TobleMiner.MineFight.API.MineFightEventAPI;
 import TobleMiner.MineFight.API.MineFightLangAPI;
 import TobleMiner.MineFight.API.MineFightProtectionAPI;
 import TobleMiner.MineFight.API.MineFightWeaponAPI;
@@ -30,6 +31,7 @@ public class Main extends JavaPlugin
 	public static MineFightWorldAPI worldapi;
 	public static MineFightLangAPI langapi;
 	public static MineFightProtectionAPI papi;
+	public static MineFightEventAPI evapi;
 	public static Logger logger;
 	public static Conf config;
 
@@ -49,6 +51,7 @@ public class Main extends JavaPlugin
 		langapi = MineFightLangAPI.instance;
 		worldapi = MineFightWorldAPI.instance;
 		papi = MineFightProtectionAPI.instance;
+		evapi = MineFightEventAPI.instance;
 		logger = mfapi.getLogger(this);
 		logger.log(Level.INFO, "MineFightWeapons enabled");
 		cmdapi.registerCommandModule(new ModuleMFW(this));
@@ -67,12 +70,36 @@ public class Main extends JavaPlugin
 		{
 			for(World w : worldapi.getKnownWorlds())
 			{
-				if(config.claymore.isEnabled(w)) wpapi.unregisterWeapon(claymore, w);
-				if(config.c4.isEnabled(w)) wpapi.unregisterWeapon(c4, w);
-				if(config.turret.isEnabled(w)) wpapi.unregisterWeapon(turret, w);
-				if(config.frag.isEnabled(w)) wpapi.unregisterWeapon(frag, w);
-				if(config.rpg.isEnabled(w)) wpapi.unregisterWeapon(rpg, w);
-				if(config.ims.isEnabled(w)) wpapi.unregisterWeapon(ims, w);
+				if(config.claymore.isEnabled(w))
+				{
+					evapi.unregisterEventListener(claymore, w);
+					wpapi.unregisterWeapon(claymore, w);
+				}
+				if(config.c4.isEnabled(w)) 
+				{
+					evapi.unregisterEventListener(c4, w);
+					wpapi.unregisterWeapon(c4, w);
+				}
+				if(config.turret.isEnabled(w))
+				{
+					evapi.unregisterEventListener(turret, w);
+					wpapi.unregisterWeapon(turret, w);
+				}
+				if(config.frag.isEnabled(w))
+				{
+					evapi.unregisterEventListener(frag, w);
+					wpapi.unregisterWeapon(frag, w);
+				}
+				if(config.rpg.isEnabled(w))
+				{
+					evapi.unregisterEventListener(rpg, w);
+					wpapi.unregisterWeapon(rpg, w);
+				}
+				if(config.ims.isEnabled(w)) 
+				{
+					evapi.unregisterEventListener(ims, w);
+					wpapi.unregisterWeapon(ims, w);
+				}
 			}
 		}
 		config = new Conf(this.getDataFolder());
@@ -81,12 +108,36 @@ public class Main extends JavaPlugin
 		langapi.addTranslations(lf.getLangWeapons());
 		for(World w : worldapi.getKnownWorlds())
 		{
-			if(config.claymore.isEnabled(w)) wpapi.registerWeapon(claymore, w);
-			if(config.c4.isEnabled(w)) wpapi.registerWeapon(c4, w);
-			if(config.turret.isEnabled(w)) wpapi.registerWeapon(turret, w);
-			if(config.frag.isEnabled(w)) wpapi.registerWeapon(frag, w);
-			if(config.rpg.isEnabled(w)) wpapi.registerWeapon(rpg, w);
-			if(config.ims.isEnabled(w)) wpapi.registerWeapon(ims, w);
+			if(config.claymore.isEnabled(w))
+			{
+				evapi.registerEventListener(claymore, w);
+				wpapi.registerWeapon(claymore, w);
+			}
+			if(config.c4.isEnabled(w)) 
+			{
+				evapi.registerEventListener(c4, w);
+				wpapi.registerWeapon(c4, w);
+			}
+			if(config.turret.isEnabled(w))
+			{
+				evapi.registerEventListener(turret, w);
+				wpapi.registerWeapon(turret, w);
+			}
+			if(config.frag.isEnabled(w))
+			{
+				evapi.registerEventListener(frag, w);
+				wpapi.registerWeapon(frag, w);
+			}
+			if(config.rpg.isEnabled(w))
+			{
+				evapi.registerEventListener(rpg, w);
+				wpapi.registerWeapon(rpg, w);
+			}
+			if(config.ims.isEnabled(w))
+			{
+				evapi.registerEventListener(ims, w);
+				wpapi.registerWeapon(ims, w);
+			}
 		}
 	}
 
