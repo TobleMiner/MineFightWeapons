@@ -21,6 +21,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import TobleMiner.MineFight.API.MineFightEventListener;
 import TobleMiner.MineFight.Debug.Debugger;
 import TobleMiner.MineFight.GameEngine.Match.Match;
 import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
@@ -29,7 +30,7 @@ import TobleMiner.MineFightWeapons.Main;
 import TobleMiner.MineFightWeapons.Weapons.Stationary.Turret.TurretMissile;
 import TobleMiner.MineFightWeapons.Weapons.Stationary.Turret.WpTurret;
 
-public class Turret implements Weapon
+public class Turret implements Weapon, MineFightEventListener
 {
 	private HashMap<Match, List<WpTurret>> turretsByMatch= new HashMap<>();
 	private HashMap<Block, WpTurret> turretsByBlock = new HashMap<>();

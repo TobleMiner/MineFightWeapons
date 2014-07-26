@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import TobleMiner.MineFight.API.MineFightEventListener;
 import TobleMiner.MineFight.Debug.Debugger;
 import TobleMiner.MineFight.GameEngine.Match.Match;
 import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
@@ -25,7 +26,7 @@ import TobleMiner.MineFight.Weapon.Weapon;
 import TobleMiner.MineFightWeapons.Main;
 import TobleMiner.MineFightWeapons.Weapons.Explosive.Missile.WpRPG;
 
-public class RPG implements Weapon
+public class RPG implements Weapon, MineFightEventListener
 {
 	private HashMap<Match, List<WpRPG>> rpgsByMatch= new HashMap<>();
 	private HashMap<PVPPlayer, List<WpRPG>> rpgsByPlayer = new HashMap<>();

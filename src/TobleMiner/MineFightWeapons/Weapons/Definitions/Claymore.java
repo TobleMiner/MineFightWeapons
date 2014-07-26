@@ -17,6 +17,7 @@ import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
+import TobleMiner.MineFight.API.MineFightEventListener;
 import TobleMiner.MineFight.Debug.Debugger;
 import TobleMiner.MineFight.GameEngine.Match.Match;
 import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
@@ -25,7 +26,7 @@ import TobleMiner.MineFight.Weapon.Weapon;
 import TobleMiner.MineFightWeapons.Main;
 import TobleMiner.MineFightWeapons.Weapons.Explosive.WpClaymore;
 
-public class Claymore implements Weapon
+public class Claymore implements Weapon, MineFightEventListener
 {
 	private HashMap<Match, List<WpClaymore>> claymorsByMatch = new HashMap<>();
 	private HashMap<Item, WpClaymore> claymorsByItem = new HashMap<>();

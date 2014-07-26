@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+import TobleMiner.MineFight.API.MineFightEventListener;
 import TobleMiner.MineFight.Debug.Debugger;
 import TobleMiner.MineFight.GameEngine.Match.Match;
 import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
@@ -29,7 +30,7 @@ import TobleMiner.MineFight.Weapon.Weapon;
 import TobleMiner.MineFightWeapons.Main;
 import TobleMiner.MineFightWeapons.Weapons.Explosive.WpC4;
 
-public class C4 implements Weapon
+public class C4 implements Weapon, MineFightEventListener
 {
 	private HashMap<Match, List<WpC4>> c4sByMatch = new HashMap<>();
 	private HashMap<Item, WpC4> c4sByItem = new HashMap<>();
