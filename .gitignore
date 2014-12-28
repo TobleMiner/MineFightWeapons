@@ -1,0 +1,8 @@
+#Java Eclipse gitignore
+bin
+
+.settings
+
+.project
+
+.classpath

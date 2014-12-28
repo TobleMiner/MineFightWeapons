@@ -31,6 +31,10 @@ public class Conf
 	{
 		File confdir = new File(plugindir, "config");
 		File confFile = new File(plugindir, "config.conf");
+		if(!confdir.exists())
+		{
+			confdir.mkdirs();
+		}
 		if(!confFile.exists())
 		{
 			this.initConfig(confFile);
