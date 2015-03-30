@@ -5,7 +5,7 @@ author: Tobias Schramm 'Toble_Miner'
 website:
 depend: [MineFight]
 
-main: TobleMiner.MineFightWeapons.Main
+main: tobleminer.mfw.Main
 
 commands:
 
