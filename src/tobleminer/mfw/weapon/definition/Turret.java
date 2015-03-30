@@ -78,8 +78,15 @@ public class Turret implements Weapon, MineFightEventListener
 					if(action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK)
 					{
 						List<WpTurret> turrets = new ArrayList<>(this.turretsByPlayer.get(player));
+						List<WpTurret> destroyedTurrets = new ArrayList<>();
 						for(WpTurret turret : turrets)
 						{
+							if(!turret.exists())
+							{
+								turret.getOwner().thePlayer.sendMessage(ChatColor.RED + tobleminer.minefight.Main.gameEngine.dict.get("sentry_destroyed"));
+								destroyedTurrets.add(turret);
+								continue;
+							}
 							Arrow arr = turret.shoot(b.getLocation());
 							if(arr != null)
 							{
@@ -89,18 +96,29 @@ public class Turret implements Weapon, MineFightEventListener
 							else
 								turret.getOwner().thePlayer.sendMessage(ChatColor.RED + tobleminer.minefight.Main.gameEngine.dict.get("sentry_ammo"));
 						}
+						for(WpTurret turret : destroyedTurrets)
+							this.remove(turret);
 					}
 					else if(action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)
 					{
 						List<WpTurret> turrets = new ArrayList<>(this.turretsByPlayer.get(player));
+						List<WpTurret> destroyedTurrets = new ArrayList<>();
 						for(WpTurret turret : turrets)
 						{
+							if(!turret.exists())
+							{
+								turret.getOwner().thePlayer.sendMessage(ChatColor.RED + tobleminer.minefight.Main.gameEngine.dict.get("sentry_destroyed"));
+								destroyedTurrets.add(turret);
+								continue;
+							}
 							TurretMissile missile = turret.shootMissile(b.getLocation());
 							if(missile != null)
 								this.missileByProjectile.put(missile.getArrow(), missile);
 							else
 								turret.getOwner().thePlayer.sendMessage(ChatColor.RED + tobleminer.minefight.Main.gameEngine.dict.get("sentry_missile"));
 						}
+						for(WpTurret turret : destroyedTurrets)
+							this.remove(turret);
 					}
 					pie.setCancelled(true);
 				}
@@ -171,7 +189,7 @@ public class Turret implements Weapon, MineFightEventListener
 				return;
 			}
 			Block b = bpe.getBlock();
-			if(Main.papi.getProtections().isBlockProtected(b) && !Main.config.c4.ignoreProtection(b.getWorld()))
+			if(Main.papi.getProtections().isBlockProtected(b) && !Main.config.turret.ignoreProtection(b.getWorld()))
 			{
 				Debugger.writeDebugOut("Turret not created: Area protected: " + bpe.getPlayer().getName());
 				bpe.setCancelled(true);
@@ -182,7 +200,7 @@ public class Turret implements Weapon, MineFightEventListener
 			this.turretsByPlayer.get(player).add(turret);
 			this.turretsByBlock.put(b, turret);
 			this.turretsByMatch.get(m).add(turret);
-			if(this.turretsByPlayer.get(player).size() > Main.config.c4.getLimit(m.getWorld()))
+			if(this.turretsByPlayer.get(player).size() > Main.config.turret.getLimit(m.getWorld()))
 			{
 				List<WpTurret> turrets = new ArrayList<>(this.turretsByPlayer.get(player));
 				if(turrets.size() > 0)

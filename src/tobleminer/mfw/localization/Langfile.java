@@ -1,4 +1,4 @@
-package tobleminer.mfw.language;
+package tobleminer.mfw.localization;
 
 import java.io.File;
 import java.io.InputStream;
@@ -32,7 +32,7 @@ public class Langfile
 					{
 						langFile.delete();
 					}
-					InputStream is = this.getClass().getResourceAsStream("Files/Misc/"+s);
+					InputStream is = this.getClass().getResourceAsStream("file/misc/"+s);
 					FileUtil.copyFromInputStreamToFileUtf8(langFile, is);
 				}
 				langFile = new File(langmiscdir, s);
@@ -42,7 +42,7 @@ public class Langfile
 					{
 						langFile.delete();
 					}
-					InputStream is = this.getClass().getResourceAsStream("Files/Weapons/"+s);
+					InputStream is = this.getClass().getResourceAsStream("file/weapon/"+s);
 					FileUtil.copyFromInputStreamToFileUtf8(langFile, is);
 				}
 			}

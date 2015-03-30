@@ -7,7 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import tobleminer.mfw.command.ModuleMFW;
 import tobleminer.mfw.config.Conf;
-import tobleminer.mfw.language.Langfile;
+import tobleminer.mfw.localization.Langfile;
 import tobleminer.mfw.weapon.definition.C4;
 import tobleminer.mfw.weapon.definition.Claymore;
 import tobleminer.mfw.weapon.definition.Frag;
