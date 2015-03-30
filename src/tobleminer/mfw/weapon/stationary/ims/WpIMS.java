@@ -12,13 +12,13 @@ import org.bukkit.entity.Item;
 import org.bukkit.util.Vector;
 
 import tobleminer.mfw.Main;
-import TobleMiner.MineFight.GameEngine.GameEngine;
-import TobleMiner.MineFight.GameEngine.Match.Match;
-import TobleMiner.MineFight.GameEngine.Match.Spawning.DangerZone;
-import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
-import TobleMiner.MineFight.Util.SyncDerp.EffectSyncCalls;
-import TobleMiner.MineFight.Util.SyncDerp.EntitySyncCalls;
-import TobleMiner.MineFight.Weapon.TickControlled.TickControlledWeapon;
+import tobleminer.minefight.engine.GameEngine;
+import tobleminer.minefight.engine.match.Match;
+import tobleminer.minefight.engine.match.spawning.DangerZone;
+import tobleminer.minefight.engine.player.PVPPlayer;
+import tobleminer.minefight.util.syncderp.EffectSyncCalls;
+import tobleminer.minefight.util.syncderp.EntitySyncCalls;
+import tobleminer.minefight.weapon.tickcontrolled.TickControlledWeapon;
 
 public class WpIMS extends TickControlledWeapon
 {

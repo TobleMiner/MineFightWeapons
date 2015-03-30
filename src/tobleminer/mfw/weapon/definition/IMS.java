@@ -19,11 +19,11 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import tobleminer.mfw.Main;
 import tobleminer.mfw.weapon.stationary.ims.WpIMS;
-import TobleMiner.MineFight.API.MineFightEventListener;
-import TobleMiner.MineFight.Debug.Debugger;
-import TobleMiner.MineFight.GameEngine.Match.Match;
-import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
-import TobleMiner.MineFight.Weapon.Weapon;
+import tobleminer.minefight.api.MineFightEventListener;
+import tobleminer.minefight.debug.Debugger;
+import tobleminer.minefight.engine.match.Match;
+import tobleminer.minefight.engine.player.PVPPlayer;
+import tobleminer.minefight.weapon.Weapon;
 
 public class IMS implements Weapon, MineFightEventListener
 {

@@ -9,9 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import tobleminer.mfw.Main;
-import TobleMiner.MineFight.Debug.Debugger;
-import TobleMiner.MineFight.GameEngine.Match.Match;
-import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
+import tobleminer.minefight.debug.Debugger;
+import tobleminer.minefight.engine.match.Match;
+import tobleminer.minefight.engine.player.PVPPlayer;
 
 public class WpTurret
 {

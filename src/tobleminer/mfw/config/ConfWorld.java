@@ -11,8 +11,8 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import tobleminer.mfw.Main;
-import TobleMiner.MineFight.Debug.Debugger;
-import TobleMiner.MineFight.Util.IO.File.FileUtil;
+import tobleminer.minefight.debug.Debugger;
+import tobleminer.minefight.util.io.file.FileUtil;
 
 public abstract class ConfWorld 
 {

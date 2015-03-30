@@ -14,7 +14,7 @@ import tobleminer.mfw.config.weapon.explosive.ConfFrag;
 import tobleminer.mfw.config.weapon.explosive.missile.ConfRPG;
 import tobleminer.mfw.config.weapon.stationary.ConfIMS;
 import tobleminer.mfw.config.weapon.stationary.ConfTurret;
-import TobleMiner.MineFight.Util.IO.File.FileUtil;
+import tobleminer.minefight.util.io.file.FileUtil;
 
 public class Conf
 {

@@ -14,14 +14,14 @@ import tobleminer.mfw.weapon.definition.Frag;
 import tobleminer.mfw.weapon.definition.IMS;
 import tobleminer.mfw.weapon.definition.RPG;
 import tobleminer.mfw.weapon.definition.Turret;
-import TobleMiner.MineFight.API.MineFightAPI;
-import TobleMiner.MineFight.API.MineFightCommandAPI;
-import TobleMiner.MineFight.API.MineFightEventAPI;
-import TobleMiner.MineFight.API.MineFightLangAPI;
-import TobleMiner.MineFight.API.MineFightProtectionAPI;
-import TobleMiner.MineFight.API.MineFightWeaponAPI;
-import TobleMiner.MineFight.API.MineFightWorldAPI;
-import TobleMiner.MineFight.ErrorHandling.Logger;
+import tobleminer.minefight.api.MineFightAPI;
+import tobleminer.minefight.api.MineFightCommandAPI;
+import tobleminer.minefight.api.MineFightEventAPI;
+import tobleminer.minefight.api.MineFightLangAPI;
+import tobleminer.minefight.api.MineFightProtectionAPI;
+import tobleminer.minefight.api.MineFightWeaponAPI;
+import tobleminer.minefight.api.MineFightWorldAPI;
+import tobleminer.minefight.error.Logger;
 
 public class Main extends JavaPlugin
 {

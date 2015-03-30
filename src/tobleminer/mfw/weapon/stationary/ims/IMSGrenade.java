@@ -6,10 +6,10 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.util.Vector;
 
 import tobleminer.mfw.Main;
-import TobleMiner.MineFight.GameEngine.GameEngine;
-import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
-import TobleMiner.MineFight.Util.SyncDerp.EntitySyncCalls;
-import TobleMiner.MineFight.Weapon.TickControlled.TickControlledWeapon;
+import tobleminer.minefight.engine.GameEngine;
+import tobleminer.minefight.engine.player.PVPPlayer;
+import tobleminer.minefight.util.syncderp.EntitySyncCalls;
+import tobleminer.minefight.weapon.tickcontrolled.TickControlledWeapon;
 
 public class IMSGrenade extends TickControlledWeapon
 {

@@ -5,10 +5,10 @@ import org.bukkit.entity.Item;
 import org.bukkit.util.Vector;
 
 import tobleminer.mfw.Main;
-import TobleMiner.MineFight.GameEngine.Match.Match;
-import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
-import TobleMiner.MineFight.Util.Geometry.Area3D;
-import TobleMiner.MineFight.Util.SyncDerp.EntitySyncCalls;
+import tobleminer.minefight.engine.match.Match;
+import tobleminer.minefight.engine.player.PVPPlayer;
+import tobleminer.minefight.util.geometry.Area3D;
+import tobleminer.minefight.util.syncderp.EntitySyncCalls;
 
 public class WpClaymore 
 {

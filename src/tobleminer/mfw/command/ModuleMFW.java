@@ -6,8 +6,8 @@ import org.bukkit.entity.Player;
 
 import tobleminer.mfw.Main;
 import tobleminer.mfw.permission.Permission;
-import TobleMiner.MineFight.Command.CommandHelp;
-import TobleMiner.MineFight.Command.Modules.CommandModule;
+import tobleminer.minefight.command.CommandHelp;
+import tobleminer.minefight.command.module.CommandModule;
 
 public class ModuleMFW extends CommandModule
 {
@@ -35,7 +35,7 @@ public class ModuleMFW extends CommandModule
 					}
 				}
 				this.main.reload();
-				sender.sendMessage(ChatColor.DARK_GREEN + TobleMiner.MineFight.Main.gameEngine.dict.get("configrl"));				
+				sender.sendMessage(ChatColor.DARK_GREEN + tobleminer.minefight.Main.gameEngine.dict.get("configrl"));				
 				return true;
 			}
 		}
@@ -113,7 +113,7 @@ public class ModuleMFW extends CommandModule
 		@Override
 		public String getDescr() 
 		{
-			return TobleMiner.MineFight.Main.gameEngine.dict.get(descr);
+			return tobleminer.minefight.Main.gameEngine.dict.get(descr);
 		}
 
 		@Override

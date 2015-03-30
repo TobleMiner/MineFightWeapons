@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.logging.Level;
 
 import tobleminer.mfw.Main;
-import TobleMiner.MineFight.Util.IO.File.FileUtil;
+import tobleminer.minefight.util.io.file.FileUtil;
 
 public class Langfile
 {

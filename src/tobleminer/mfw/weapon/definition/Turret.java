@@ -24,11 +24,11 @@ import org.bukkit.inventory.ItemStack;
 import tobleminer.mfw.Main;
 import tobleminer.mfw.weapon.stationary.turret.TurretMissile;
 import tobleminer.mfw.weapon.stationary.turret.WpTurret;
-import TobleMiner.MineFight.API.MineFightEventListener;
-import TobleMiner.MineFight.Debug.Debugger;
-import TobleMiner.MineFight.GameEngine.Match.Match;
-import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
-import TobleMiner.MineFight.Weapon.Weapon;
+import tobleminer.minefight.api.MineFightEventListener;
+import tobleminer.minefight.debug.Debugger;
+import tobleminer.minefight.engine.match.Match;
+import tobleminer.minefight.engine.player.PVPPlayer;
+import tobleminer.minefight.weapon.Weapon;
 
 public class Turret implements Weapon, MineFightEventListener
 {
@@ -87,7 +87,7 @@ public class Turret implements Weapon, MineFightEventListener
 								m.registerProjectile(arr);
 							}
 							else
-								turret.getOwner().thePlayer.sendMessage(ChatColor.RED + TobleMiner.MineFight.Main.gameEngine.dict.get("sentry_ammo"));
+								turret.getOwner().thePlayer.sendMessage(ChatColor.RED + tobleminer.minefight.Main.gameEngine.dict.get("sentry_ammo"));
 						}
 					}
 					else if(action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)
@@ -99,7 +99,7 @@ public class Turret implements Weapon, MineFightEventListener
 							if(missile != null)
 								this.missileByProjectile.put(missile.getArrow(), missile);
 							else
-								turret.getOwner().thePlayer.sendMessage(ChatColor.RED + TobleMiner.MineFight.Main.gameEngine.dict.get("sentry_missile"));
+								turret.getOwner().thePlayer.sendMessage(ChatColor.RED + tobleminer.minefight.Main.gameEngine.dict.get("sentry_missile"));
 						}
 					}
 					pie.setCancelled(true);

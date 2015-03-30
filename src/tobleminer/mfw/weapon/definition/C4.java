@@ -23,12 +23,12 @@ import org.bukkit.inventory.ItemStack;
 
 import tobleminer.mfw.Main;
 import tobleminer.mfw.weapon.explosive.WpC4;
-import TobleMiner.MineFight.API.MineFightEventListener;
-import TobleMiner.MineFight.Debug.Debugger;
-import TobleMiner.MineFight.GameEngine.Match.Match;
-import TobleMiner.MineFight.GameEngine.Player.PVPPlayer;
-import TobleMiner.MineFight.Util.Util;
-import TobleMiner.MineFight.Weapon.Weapon;
+import tobleminer.minefight.api.MineFightEventListener;
+import tobleminer.minefight.debug.Debugger;
+import tobleminer.minefight.engine.match.Match;
+import tobleminer.minefight.engine.player.PVPPlayer;
+import tobleminer.minefight.util.Util;
+import tobleminer.minefight.weapon.Weapon;
 
 public class C4 implements Weapon, MineFightEventListener
 {
