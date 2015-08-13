@@ -12,30 +12,30 @@ import tobleminer.minefight.command.module.CommandModule;
 public class ModuleMFW extends CommandModule
 {
 	private final Main main;
-	
+
 	public ModuleMFW(Main m)
 	{
 		this.main = m;
 	}
-	
+
 	@Override
 	public boolean handleCommand(String[] args, CommandSender sender)
 	{
-		if(args.length >= 1)
+		if (args.length >= 1)
 		{
-			if(args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl"))
+			if (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl"))
 			{
-				if(sender instanceof Player)
+				if (sender instanceof Player)
 				{
-					Player p = (Player)sender;
-					if(!Main.cmdapi.hasPlayerPermission(p, Permission.MPVP_MFW_RELOAD.toString()))
+					Player p = (Player) sender;
+					if (!Main.cmdapi.hasPlayerPermission(p, Permission.MPVP_MFW_RELOAD.toString()))
 					{
 						p.sendMessage(this.noPermMsg);
 						return true;
 					}
 				}
 				this.main.reload();
-				sender.sendMessage(ChatColor.DARK_GREEN + tobleminer.minefight.Main.gameEngine.dict.get("configrl"));				
+				sender.sendMessage(ChatColor.DARK_GREEN + tobleminer.minefight.Main.gameEngine.dict.get("configrl"));
 				return true;
 			}
 		}
@@ -51,18 +51,18 @@ public class ModuleMFW extends CommandModule
 	@Override
 	public CommandHelp getHelp(String cmd)
 	{
-		for(CommandHelp help : CommandMFWAdmin.values())
-			if(help.getCmd().equalsIgnoreCase(cmd))
+		for (CommandHelp help : CommandMFWAdmin.values())
+			if (help.getCmd().equalsIgnoreCase(cmd))
 				return help;
 		return null;
 	}
-	
+
 	@Override
 	public CommandHelp[] getHelp()
 	{
 		return CommandMFWAdmin.values();
 	}
-	
+
 	private enum CommandMFWAdmin implements CommandHelp
 	{
 		RELOAD("mfw", "reload", 0, 0, "cmdDescrMFWReload", "/mpvp mfw reload", Permission.MPVP_MFW_RELOAD.toString());
@@ -74,8 +74,9 @@ public class ModuleMFW extends CommandModule
 		private final String descr;
 		public final String perm;
 		public final String syntax;
-		
-		CommandMFWAdmin(String module, String cmd, int argnumMin,int argnumMax, String descr, String syntax, String perm)
+
+		CommandMFWAdmin(String module, String cmd, int argnumMin, int argnumMax, String descr, String syntax,
+				String perm)
 		{
 			this.module = module;
 			this.cmd = cmd;
@@ -91,7 +92,7 @@ public class ModuleMFW extends CommandModule
 		{
 			return cmd;
 		}
-		
+
 		@Override
 		public String getModule()
 		{
@@ -99,7 +100,7 @@ public class ModuleMFW extends CommandModule
 		}
 
 		@Override
-		public int argMin() 
+		public int argMin()
 		{
 			return argnumMin;
 		}
@@ -111,7 +112,7 @@ public class ModuleMFW extends CommandModule
 		}
 
 		@Override
-		public String getDescr() 
+		public String getDescr()
 		{
 			return tobleminer.minefight.Main.gameEngine.dict.get(descr);
 		}

@@ -18,39 +18,39 @@ import tobleminer.minefight.util.io.file.FileUtil;
 
 public class Conf
 {
-	
-	private YamlConfiguration conf;
-	public ConfClaymore claymore;
-	public ConfC4 c4;
-	public ConfTurret turret;
-	public ConfFrag frag;
-	public ConfRPG rpg;
-	public ConfIMS ims;
-	
+
+	private YamlConfiguration	conf;
+	public ConfClaymore			claymore;
+	public ConfC4				c4;
+	public ConfTurret			turret;
+	public ConfFrag				frag;
+	public ConfRPG				rpg;
+	public ConfIMS				ims;
+
 	public Conf(File plugindir)
 	{
 		File confdir = new File(plugindir, "config");
 		File confFile = new File(plugindir, "config.conf");
-		if(!confdir.exists())
+		if (!confdir.exists())
 		{
 			confdir.mkdirs();
 		}
-		if(!confFile.exists())
+		if (!confFile.exists())
 		{
 			this.initConfig(confFile);
 		}
-		this.conf= new YamlConfiguration();
-		try 
+		this.conf = new YamlConfiguration();
+		try
 		{
 			this.conf.load(confFile);
-			if(this.conf.getBoolean("reset", true))
+			if (this.conf.getBoolean("reset", true))
 			{
 				confFile.delete();
 				this.initConfig(confFile);
 				this.conf.load(confFile);
 			}
 			boolean resetAll = this.resetAll();
-			if(resetAll)
+			if (resetAll)
 			{
 				this.conf.set("resetAll", false);
 				this.conf.save(confFile);
@@ -62,21 +62,22 @@ public class Conf
 			this.rpg = new ConfRPG(confdir, resetAll);
 			this.ims = new ConfIMS(confdir, resetAll);
 		}
-		catch(Exception ex)
+		catch (Exception ex)
 		{
-			if(ex instanceof InvalidConfigurationException)
+			if (ex instanceof InvalidConfigurationException)
 			{
-				Main.logger.log(Level.SEVERE, String.format("Oops, looks like the configuration '%s' contains errors:", confFile.getAbsolutePath()));
+				Main.logger.log(Level.SEVERE, String.format("Oops, looks like the configuration '%s' contains errors:",
+						confFile.getAbsolutePath()));
 				ex.printStackTrace();
 			}
 		}
 	}
-	
+
 	private boolean resetAll()
 	{
 		return this.conf.getBoolean("resetAll", false);
 	}
-	
+
 	private void initConfig(File confFile)
 	{
 		InputStream is = this.getClass().getResourceAsStream("conf.conf");
@@ -84,12 +85,13 @@ public class Conf
 		{
 			FileUtil.copyFromInputStreamToFileUtf8(confFile, is);
 		}
-		catch(Exception ex)
+		catch (Exception ex)
 		{
-			Main.logger.log(Level.SEVERE, "Failed writing default config file. Make sure that the server has write permissions for the plugin folder.");
+			Main.logger.log(Level.SEVERE,
+					"Failed writing default config file. Make sure that the server has write permissions for the plugin folder.");
 		}
 	}
-	
+
 	public String getLang()
 	{
 		return this.conf.getString("langfile", "EN_us.lang");

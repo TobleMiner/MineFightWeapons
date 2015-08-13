@@ -28,10 +28,10 @@ import tobleminer.minefight.weapon.Weapon;
 
 public class Frag implements Weapon, MineFightEventListener
 {
-	private HashMap<Match, List<WpFrag>> fragsByMatch = new HashMap<>();
-	private HashMap<Item, WpFrag> fragsByItem = new HashMap<>();
-	private HashMap<PVPPlayer, List<WpFrag>> fragsByPlayer = new HashMap<>();
-		
+	private HashMap<Match, List<WpFrag>>		fragsByMatch	= new HashMap<>();
+	private HashMap<Item, WpFrag>				fragsByItem		= new HashMap<>();
+	private HashMap<PVPPlayer, List<WpFrag>>	fragsByPlayer	= new HashMap<>();
+
 	@Override
 	public void getRequiredEvents(List<Class<?>> events)
 	{
@@ -48,35 +48,37 @@ public class Frag implements Weapon, MineFightEventListener
 	public void onEvent(Match m, Event event)
 	{
 		World w = m.getWorld();
-		if(event instanceof PlayerDropItemEvent)
+		if (event instanceof PlayerDropItemEvent)
 		{
-			PlayerDropItemEvent pdie = (PlayerDropItemEvent)event;
-			if(pdie.getItemDrop().getItemStack().getType() != this.getMaterial(m.getWorld()) || pdie.getItemDrop().getItemStack().getDurability() != this.getSubId(m.getWorld()))
+			PlayerDropItemEvent pdie = (PlayerDropItemEvent) event;
+			if (pdie.getItemDrop().getItemStack().getType() != this.getMaterial(m.getWorld())
+					|| pdie.getItemDrop().getItemStack().getDurability() != this.getSubId(m.getWorld()))
 				return;
 			Debugger.writeDebugOut("frag dropped by " + pdie.getPlayer().getName());
 			PVPPlayer player = m.getPlayerExact(pdie.getPlayer());
-			if(player == null || !player.isSpawned())
+			if (player == null || !player.isSpawned())
 			{
 				Debugger.writeDebugOut("frag not created: Player not spawned: " + pdie.getPlayer().getName());
 				pdie.setCancelled(true);
 				return;
 			}
 			Item item = pdie.getItemDrop();
-			if(Main.papi.getProtections().isLocProtected(item.getLocation()) && !Main.config.frag.ignoreProtection(item.getWorld()))
+			if (Main.papi.getProtections().isLocProtected(item.getLocation())
+					&& !Main.config.frag.ignoreProtection(item.getWorld()))
 			{
 				Debugger.writeDebugOut("frag not created: Area protected: " + pdie.getPlayer().getName());
 				pdie.setCancelled(true);
 				return;
 			}
 			Debugger.writeDebugOut("frag created: " + pdie.getPlayer().getName());
-			float speed = (float)Main.config.frag.getThrowSpeed(w);
-			if(player.thePlayer.isSneaking())
+			float speed = (float) Main.config.frag.getThrowSpeed(w);
+			if (player.thePlayer.isSneaking())
 			{
-				speed = (float)Main.config.frag.getThrowSpeedSneak(w);
+				speed = (float) Main.config.frag.getThrowSpeedSneak(w);
 			}
-			else if(player.thePlayer.isSprinting())
+			else if (player.thePlayer.isSprinting())
 			{
-				speed = (float)Main.config.frag.getThrowSpeedSprint(w);
+				speed = (float) Main.config.frag.getThrowSpeedSprint(w);
 			}
 			WpFrag frag = new WpFrag(item, player, m, this, speed);
 			this.fragsByPlayer.get(player).add(frag);
@@ -84,31 +86,32 @@ public class Frag implements Weapon, MineFightEventListener
 			this.fragsByMatch.get(m).add(frag);
 			pdie.setCancelled(false);
 		}
-		else if(event instanceof PlayerPickupItemEvent)
+		else if (event instanceof PlayerPickupItemEvent)
 		{
-			PlayerPickupItemEvent ppie = (PlayerPickupItemEvent)event;
-			if(ppie.getItem().getItemStack().getType() != this.getMaterial(m.getWorld()))
+			PlayerPickupItemEvent ppie = (PlayerPickupItemEvent) event;
+			if (ppie.getItem().getItemStack().getType() != this.getMaterial(m.getWorld()))
 				return;
 			WpFrag frag = this.fragsByItem.get(ppie.getItem());
-			if(frag == null)
+			if (frag == null)
 				return;
-			Debugger.writeDebugOut(String.format("%s is trying to pick up a frag: Owner: %s", ppie.getPlayer().getName(), frag.owner.thePlayer.getName()));
+			Debugger.writeDebugOut(String.format("%s is trying to pick up a frag: Owner: %s",
+					ppie.getPlayer().getName(), frag.owner.thePlayer.getName()));
 			ppie.setCancelled(true);
 		}
-		else if(event instanceof EntityDamageEvent)
+		else if (event instanceof EntityDamageEvent)
 		{
-			EntityDamageEvent ede = (EntityDamageEvent)event;
-			if(ede.getEntity() instanceof Item)
+			EntityDamageEvent ede = (EntityDamageEvent) event;
+			if (ede.getEntity() instanceof Item)
 			{
-				Item item = (Item)ede.getEntity();
-				if(item.getItemStack().getType() != this.getMaterial(m.getWorld()))
+				Item item = (Item) ede.getEntity();
+				if (item.getItemStack().getType() != this.getMaterial(m.getWorld()))
 					return;
 				WpFrag frag = this.fragsByItem.get(item);
-				if(frag == null)
+				if (frag == null)
 					return;
 				Debugger.writeDebugOut("frag damaged");
 				ede.setCancelled(true);
-				if(ede.getCause() == DamageCause.BLOCK_EXPLOSION || ede.getCause() == DamageCause.ENTITY_EXPLOSION)
+				if (ede.getCause() == DamageCause.BLOCK_EXPLOSION || ede.getCause() == DamageCause.ENTITY_EXPLOSION)
 				{
 					Debugger.writeDebugOut("frag damaged by explosion. Exploding.");
 					frag.explode();
@@ -117,30 +120,30 @@ public class Frag implements Weapon, MineFightEventListener
 				}
 			}
 		}
-		else if(event instanceof EntityCombustEvent)
+		else if (event instanceof EntityCombustEvent)
 		{
-			EntityCombustEvent ice = (EntityCombustEvent)event;
-			if(ice.getEntity() instanceof Item)
+			EntityCombustEvent ice = (EntityCombustEvent) event;
+			if (ice.getEntity() instanceof Item)
 			{
-				Item item = (Item)ice.getEntity();
-				if(item.getItemStack().getType() != this.getMaterial(m.getWorld()))
+				Item item = (Item) ice.getEntity();
+				if (item.getItemStack().getType() != this.getMaterial(m.getWorld()))
 					return;
 				WpFrag frag = this.fragsByItem.get(item);
-				if(frag == null)
+				if (frag == null)
 					return;
 				ice.setCancelled(true);
 				frag.explode();
 				return;
 			}
 		}
-		else if(event instanceof ItemDespawnEvent)
+		else if (event instanceof ItemDespawnEvent)
 		{
-			ItemDespawnEvent ide = (ItemDespawnEvent)event;
-			Item item = (Item)ide.getEntity();
-			if(item.getItemStack().getType() != this.getMaterial(m.getWorld()))
+			ItemDespawnEvent ide = (ItemDespawnEvent) event;
+			Item item = (Item) ide.getEntity();
+			if (item.getItemStack().getType() != this.getMaterial(m.getWorld()))
 				return;
 			WpFrag frag = this.fragsByItem.get(item);
-			if(frag == null)
+			if (frag == null)
 				return;
 			ide.setCancelled(true);
 		}
@@ -149,16 +152,16 @@ public class Frag implements Weapon, MineFightEventListener
 	@Override
 	public void onKill(Match m, PVPPlayer killer, PVPPlayer killed)
 	{
-		//nop
+		// nop
 	}
 
 	@Override
-	public void onDeath(Match m, PVPPlayer killed, PVPPlayer killer) 
+	public void onDeath(Match m, PVPPlayer killed, PVPPlayer killer)
 	{
-		if(Main.config.frag.despawnOnDeath(m.getWorld()))
+		if (Main.config.frag.despawnOnDeath(m.getWorld()))
 		{
 			List<WpFrag> frags = new ArrayList<>(this.fragsByPlayer.get(killed));
-			for(WpFrag frag : frags)
+			for (WpFrag frag : frags)
 			{
 				this.remove(frag);
 				EntitySyncCalls.removeEntity(frag.item);
@@ -167,19 +170,19 @@ public class Frag implements Weapon, MineFightEventListener
 	}
 
 	@Override
-	public void onRespawn(Match m, PVPPlayer player) 
+	public void onRespawn(Match m, PVPPlayer player)
 	{
-		//nop
+		// nop
 	}
 
 	@Override
-	public void matchCreated(Match m) 
+	public void matchCreated(Match m)
 	{
 		fragsByMatch.put(m, new ArrayList<WpFrag>());
 	}
 
 	@Override
-	public void matchEnded(Match m) 
+	public void matchEnded(Match m)
 	{
 		fragsByMatch.remove(m);
 	}
@@ -187,22 +190,22 @@ public class Frag implements Weapon, MineFightEventListener
 	@Override
 	public void onTick()
 	{
-		//nop
+		// nop
 	}
 
 	@Override
-	public void onJoin(Match m, PVPPlayer player) 
+	public void onJoin(Match m, PVPPlayer player)
 	{
 		Debugger.writeDebugOut("Creating frag-entry for " + player.thePlayer.getName());
 		fragsByPlayer.put(player, new ArrayList<WpFrag>());
 	}
 
 	@Override
-	public void onLeave(Match m, PVPPlayer player) 
+	public void onLeave(Match m, PVPPlayer player)
 	{
 		Debugger.writeDebugOut("Removing frag-entry for " + player.thePlayer.getName());
 		List<WpFrag> frags = new ArrayList<>(this.fragsByPlayer.get(player));
-		for(WpFrag frag : frags)
+		for (WpFrag frag : frags)
 		{
 			fragsByItem.remove(frag.item);
 			fragsByMatch.get(m).remove(frag);
@@ -215,7 +218,7 @@ public class Frag implements Weapon, MineFightEventListener
 	{
 		Debugger.writeDebugOut("Removing fragmors due to teamchange: " + player.thePlayer.getName());
 		List<WpFrag> frags = new ArrayList<>(this.fragsByPlayer.get(player));
-		for(WpFrag frag : frags)
+		for (WpFrag frag : frags)
 		{
 			this.remove(frag);
 			EntitySyncCalls.removeEntity(frag.item);
@@ -229,12 +232,13 @@ public class Frag implements Weapon, MineFightEventListener
 	}
 
 	@Override
-	public short getSubId(World w) 
+	public short getSubId(World w)
 	{
 		return Main.config.frag.getSubid(w);
 	}
-	
-	public void remove(WpFrag frag) //Used as callback frow WpFrag to remove references to invalid frag
+
+	public void remove(WpFrag frag) // Used as callback frow WpFrag to remove
+									// references to invalid frag
 	{
 		this.fragsByItem.remove(frag.item);
 		this.fragsByMatch.get(frag.owner.getMatch()).remove(frag);

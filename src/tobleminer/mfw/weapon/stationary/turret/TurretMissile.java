@@ -13,15 +13,15 @@ import tobleminer.minefight.weapon.tickcontrolled.TickControlledWeapon;
 
 public class TurretMissile extends TickControlledWeapon
 {
-	private final Vector dir;
-	private final WpTurret turret;
-	private final float exploStr;
-	private final Arrow arr;
-	private final double speed;
-	private int timer = 1;
-	private double time = 0d;
-	private double lifeTime = 40d;
-	
+	private final Vector	dir;
+	private final WpTurret	turret;
+	private final float		exploStr;
+	private final Arrow		arr;
+	private final double	speed;
+	private int				timer		= 1;
+	private double			time		= 0d;
+	private double			lifeTime	= 40d;
+
 	public TurretMissile(Match match, Vector dir, WpTurret turret, float exploStr, Arrow arr, double speed)
 	{
 		super(match);
@@ -36,11 +36,11 @@ public class TurretMissile extends TickControlledWeapon
 	@Override
 	public void doUpdate()
 	{
-		if(timer >= GameEngine.tps/10d)
+		if (timer >= GameEngine.tps / 10d)
 		{
 			time += 0.1d;
 			timer = 0;
-			if(time > lifeTime)
+			if (time > lifeTime)
 			{
 				this.explode();
 			}
@@ -48,25 +48,25 @@ public class TurretMissile extends TickControlledWeapon
 			EffectSyncCalls.showEffect(loc, Effect.SMOKE, 0);
 			EffectSyncCalls.showEffect(loc, Effect.MOBSPAWNER_FLAMES, 0);
 			Vector vec = dir.clone();
-			double mul = this.speed/vec.length();
+			double mul = this.speed / vec.length();
 			this.arr.setVelocity(vec.clone().multiply(mul));
 		}
 		timer++;
 	}
-	
+
 	public void explode()
 	{
 		this.unregisterTickControlled();
 		match.createExplosion(turret.getOwner(), arr.getLocation(), exploStr, turret.getLocName());
 		this.remove();
 	}
-	
+
 	public void remove()
 	{
 		this.match.unregisterProjectile(this.arr);
 		EntitySyncCalls.removeEntity(this.arr);
 	}
-	
+
 	public Arrow getArrow()
 	{
 		return this.arr;

@@ -14,28 +14,29 @@ import tobleminer.mfw.Main;
 import tobleminer.minefight.debug.Debugger;
 import tobleminer.minefight.util.io.file.FileUtil;
 
-public abstract class ConfWorld 
+public abstract class ConfWorld
 {
 	private final HashMap<World, YamlConfiguration> configs = new HashMap<>();
-	
+
 	public ConfWorld(File confdir, boolean forceReset)
 	{
-		for(World w : Bukkit.getServer().getWorlds())
+		for (World w : Bukkit.getServer().getWorlds())
 		{
 			File worlddir = new File(confdir, w.getName());
-			if(!worlddir.exists())
+			if (!worlddir.exists())
 				worlddir.mkdirs();
 			File confFile = new File(worlddir, this.getFilename());
-			if(!confFile.exists())
+			if (!confFile.exists())
 			{
-				Debugger.writeDebugOut(String.format("Config '%s' doesn't exist. Creating...", confFile.getAbsoluteFile()));
+				Debugger.writeDebugOut(
+						String.format("Config '%s' doesn't exist. Creating...", confFile.getAbsoluteFile()));
 				this.initConfig(confFile);
 			}
 			YamlConfiguration worldConf = new YamlConfiguration();
-			try 
+			try
 			{
 				worldConf.load(confFile);
-				if(worldConf.getBoolean("reset", true) || forceReset)
+				if (worldConf.getBoolean("reset", true) || forceReset)
 				{
 					confFile.delete();
 					this.initConfig(confFile);
@@ -43,17 +44,18 @@ public abstract class ConfWorld
 				}
 				configs.put(w, worldConf);
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
-				if(ex instanceof InvalidConfigurationException)
+				if (ex instanceof InvalidConfigurationException)
 				{
-					Main.logger.log(Level.SEVERE, String.format("Oops, looks like the configuration '%s' contains errors:", confFile.getAbsolutePath()));
+					Main.logger.log(Level.SEVERE, String.format(
+							"Oops, looks like the configuration '%s' contains errors:", confFile.getAbsolutePath()));
 					ex.printStackTrace();
 				}
 			}
 		}
 	}
-	
+
 	private void initConfig(File confFile)
 	{
 		InputStream is = this.getClass().getResourceAsStream(this.getFilename());
@@ -61,19 +63,20 @@ public abstract class ConfWorld
 		{
 			FileUtil.copyFromInputStreamToFileUtf8(confFile, is);
 		}
-		catch(Exception ex)
+		catch (Exception ex)
 		{
-			Main.logger.log(Level.SEVERE, "Failed writing default config files. Make sure that the server has write permissions for the plugin folder.");
+			Main.logger.log(Level.SEVERE,
+					"Failed writing default config files. Make sure that the server has write permissions for the plugin folder.");
 		}
 	}
-	
+
 	protected YamlConfiguration getConfig(World w)
 	{
 		YamlConfiguration conf = this.configs.get(w);
-		if(conf == null)
+		if (conf == null)
 			Main.logger.log(Level.SEVERE, String.format("Unknown world: '%s'", w.getName()));
 		return conf;
 	}
-	
+
 	protected abstract String getFilename();
 }

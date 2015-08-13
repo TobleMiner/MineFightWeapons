@@ -28,10 +28,10 @@ import tobleminer.minefight.weapon.Weapon;
 
 public class RPG implements Weapon, MineFightEventListener
 {
-	private HashMap<Match, List<WpRPG>> rpgsByMatch= new HashMap<>();
-	private HashMap<PVPPlayer, List<WpRPG>> rpgsByPlayer = new HashMap<>();
-	private HashMap<Arrow, WpRPG> rpgByProjectile = new HashMap<>();
-		
+	private HashMap<Match, List<WpRPG>>		rpgsByMatch		= new HashMap<>();
+	private HashMap<PVPPlayer, List<WpRPG>>	rpgsByPlayer	= new HashMap<>();
+	private HashMap<Arrow, WpRPG>			rpgByProjectile	= new HashMap<>();
+
 	@Override
 	public void getRequiredEvents(List<Class<?>> events)
 	{
@@ -43,58 +43,61 @@ public class RPG implements Weapon, MineFightEventListener
 	public void onEvent(Match m, Event event)
 	{
 		World w = m.getWorld();
-		if(event instanceof PlayerInteractEvent)
+		if (event instanceof PlayerInteractEvent)
 		{
-			PlayerInteractEvent pie = (PlayerInteractEvent)event;
+			PlayerInteractEvent pie = (PlayerInteractEvent) event;
 			PVPPlayer player = m.getPlayerExact(pie.getPlayer());
-			if(player == null || !player.isSpawned())
+			if (player == null || !player.isSpawned())
 			{
 				Debugger.writeDebugOut("rpg not created: Player not spawned: " + pie.getPlayer().getName());
 				pie.setCancelled(true);
 				return;
 			}
 			ItemStack inHand = player.thePlayer.getItemInHand();
-			if(inHand == null)
+			if (inHand == null)
 				return;
 			Action action = pie.getAction();
 			Debugger.writeDebugOut(String.format("Hand: %s:%d", inHand.getType().toString(), inHand.getDurability()));
-			Debugger.writeDebugOut(String.format("RPG: %s:%d", Main.config.rpg.getMaterial(w).toString(), Main.config.rpg.getSubid(w)));
-			if(inHand.getType() == Main.config.rpg.getMaterial(w) && inHand.getDurability() == Main.config.rpg.getSubid(w))
+			Debugger.writeDebugOut(String.format("RPG: %s:%d", Main.config.rpg.getMaterial(w).toString(),
+					Main.config.rpg.getSubid(w)));
+			if (inHand.getType() == Main.config.rpg.getMaterial(w)
+					&& inHand.getDurability() == Main.config.rpg.getSubid(w))
 			{
-				if(action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK)
+				if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK)
 					return;
 				HashSet<Byte> trans = new HashSet<Byte>();
-				trans.add((byte)31);
-				trans.add((byte)0);
-				trans.add((byte)20);
-				trans.add((byte)102);
+				trans.add((byte) 31);
+				trans.add((byte) 0);
+				trans.add((byte) 20);
+				trans.add((byte) 102);
 				Block b = player.thePlayer.getTargetBlock(trans, 200);
-				if(b != null)
+				if (b != null)
 				{
 					Location playerEyeLoc = player.thePlayer.getEyeLocation();
 					Vector locHelp = b.getLocation().subtract(playerEyeLoc).toVector();
-					Location launchLoc = playerEyeLoc.add(locHelp.multiply(1.5d/locHelp.length()));
+					Location launchLoc = playerEyeLoc.add(locHelp.multiply(1.5d / locHelp.length()));
 					Vector vec = b.getLocation().subtract(launchLoc).toVector();
 					Arrow arr = w.spawnArrow(launchLoc, locHelp, 1f, 1f);
 					WpRPG rpg = new WpRPG(m, arr, player, vec, this);
 					this.rpgsByMatch.get(m).add(rpg);
 					this.rpgByProjectile.put(arr, rpg);
 					this.rpgsByPlayer.get(player).add(rpg);
-					player.thePlayer.getInventory().removeItem(new ItemStack(Main.config.rpg.getMaterial(w), 1, Main.config.rpg.getSubid(w)));
+					player.thePlayer.getInventory()
+							.removeItem(new ItemStack(Main.config.rpg.getMaterial(w), 1, Main.config.rpg.getSubid(w)));
 					player.thePlayer.updateInventory();
 					pie.setCancelled(true);
 				}
 			}
 		}
-		else if(event instanceof ProjectileHitEvent)
+		else if (event instanceof ProjectileHitEvent)
 		{
-			ProjectileHitEvent phe = (ProjectileHitEvent)event;
+			ProjectileHitEvent phe = (ProjectileHitEvent) event;
 			Projectile proj = phe.getEntity();
-			if(!(proj instanceof Arrow))
+			if (!(proj instanceof Arrow))
 				return;
-			Arrow arr = (Arrow)proj;
+			Arrow arr = (Arrow) proj;
 			WpRPG rpg = this.rpgByProjectile.get(arr);
-			if(rpg == null)
+			if (rpg == null)
 				return;
 			rpg.explode();
 		}
@@ -103,16 +106,16 @@ public class RPG implements Weapon, MineFightEventListener
 	@Override
 	public void onKill(Match m, PVPPlayer killer, PVPPlayer killed)
 	{
-		//nop
+		// nop
 	}
 
 	@Override
-	public void onDeath(Match m, PVPPlayer killed, PVPPlayer killer) 
+	public void onDeath(Match m, PVPPlayer killed, PVPPlayer killer)
 	{
-		if(Main.config.rpg.despawnOnDeath(m.getWorld()))
+		if (Main.config.rpg.despawnOnDeath(m.getWorld()))
 		{
 			List<WpRPG> rpgs = new ArrayList<>(this.rpgsByPlayer.get(killed));
-			for(WpRPG rpg : rpgs)
+			for (WpRPG rpg : rpgs)
 			{
 				this.remove(rpg);
 				rpg.remove();
@@ -121,19 +124,19 @@ public class RPG implements Weapon, MineFightEventListener
 	}
 
 	@Override
-	public void onRespawn(Match m, PVPPlayer player) 
+	public void onRespawn(Match m, PVPPlayer player)
 	{
-		//nop
+		// nop
 	}
 
 	@Override
-	public void matchCreated(Match m) 
+	public void matchCreated(Match m)
 	{
 		rpgsByMatch.put(m, new ArrayList<WpRPG>());
 	}
 
 	@Override
-	public void matchEnded(Match m) 
+	public void matchEnded(Match m)
 	{
 		rpgsByMatch.remove(m);
 	}
@@ -141,22 +144,22 @@ public class RPG implements Weapon, MineFightEventListener
 	@Override
 	public void onTick()
 	{
-		//nop
+		// nop
 	}
 
 	@Override
-	public void onJoin(Match m, PVPPlayer player) 
+	public void onJoin(Match m, PVPPlayer player)
 	{
 		Debugger.writeDebugOut("Creating rpg-entry for " + player.thePlayer.getName());
 		rpgsByPlayer.put(player, new ArrayList<WpRPG>());
 	}
 
 	@Override
-	public void onLeave(Match m, PVPPlayer player) 
+	public void onLeave(Match m, PVPPlayer player)
 	{
 		Debugger.writeDebugOut("Removing rpg-entry for " + player.thePlayer.getName());
 		List<WpRPG> rpgs = new ArrayList<>(rpgsByPlayer.get(player));
-		for(WpRPG rpg : rpgs)
+		for (WpRPG rpg : rpgs)
 		{
 			rpgByProjectile.remove(rpg.arr);
 			rpgsByMatch.get(m).remove(rpg);
@@ -170,7 +173,7 @@ public class RPG implements Weapon, MineFightEventListener
 	{
 		Debugger.writeDebugOut("Removing rpg due to teamchange: " + player.thePlayer.getName());
 		List<WpRPG> rpgs = new ArrayList<>(this.rpgsByPlayer.get(player));
-		for(WpRPG rpg : rpgs)
+		for (WpRPG rpg : rpgs)
 		{
 			this.remove(rpg);
 			rpg.remove();
@@ -184,11 +187,11 @@ public class RPG implements Weapon, MineFightEventListener
 	}
 
 	@Override
-	public short getSubId(World w) 
+	public short getSubId(World w)
 	{
 		return Main.config.rpg.getSubid(w);
 	}
-	
+
 	public void remove(WpRPG rpg)
 	{
 		this.rpgByProjectile.remove(rpg.arr);

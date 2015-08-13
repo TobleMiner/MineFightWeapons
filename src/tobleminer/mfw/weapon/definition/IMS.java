@@ -27,10 +27,10 @@ import tobleminer.minefight.weapon.Weapon;
 
 public class IMS implements Weapon, MineFightEventListener
 {
-	private HashMap<Match, List<WpIMS>> imssByMatch = new HashMap<>();
-	private HashMap<Item, WpIMS> imsByItem = new HashMap<>();
-	private HashMap<PVPPlayer, List<WpIMS>> imssByPlayer = new HashMap<>();
-		
+	private HashMap<Match, List<WpIMS>>		imssByMatch		= new HashMap<>();
+	private HashMap<Item, WpIMS>			imsByItem		= new HashMap<>();
+	private HashMap<PVPPlayer, List<WpIMS>>	imssByPlayer	= new HashMap<>();
+
 	@Override
 	public void getRequiredEvents(List<Class<?>> events)
 	{
@@ -46,21 +46,23 @@ public class IMS implements Weapon, MineFightEventListener
 	@Override
 	public void onEvent(Match m, Event event)
 	{
-		if(event instanceof PlayerDropItemEvent)
+		if (event instanceof PlayerDropItemEvent)
 		{
-			PlayerDropItemEvent pdie = (PlayerDropItemEvent)event;
-			if(pdie.getItemDrop().getItemStack().getType() != this.getMaterial(m.getWorld()) || pdie.getItemDrop().getItemStack().getDurability() != this.getSubId(m.getWorld()))
+			PlayerDropItemEvent pdie = (PlayerDropItemEvent) event;
+			if (pdie.getItemDrop().getItemStack().getType() != this.getMaterial(m.getWorld())
+					|| pdie.getItemDrop().getItemStack().getDurability() != this.getSubId(m.getWorld()))
 				return;
 			Debugger.writeDebugOut("ims dropped by " + pdie.getPlayer().getName());
 			PVPPlayer player = m.getPlayerExact(pdie.getPlayer());
-			if(player == null || !player.isSpawned())
+			if (player == null || !player.isSpawned())
 			{
 				Debugger.writeDebugOut("ims not created: Player not spawned: " + pdie.getPlayer().getName());
 				pdie.setCancelled(true);
 				return;
 			}
 			Item item = pdie.getItemDrop();
-			if(Main.papi.getProtections().isLocProtected(item.getLocation()) && !Main.config.ims.ignoreProtection(item.getWorld()))
+			if (Main.papi.getProtections().isLocProtected(item.getLocation())
+					&& !Main.config.ims.ignoreProtection(item.getWorld()))
 			{
 				Debugger.writeDebugOut("ims not created: Area protected: " + pdie.getPlayer().getName());
 				pdie.setCancelled(true);
@@ -71,10 +73,10 @@ public class IMS implements Weapon, MineFightEventListener
 			this.imssByPlayer.get(player).add(ims);
 			this.imsByItem.put(item, ims);
 			this.imssByMatch.get(m).add(ims);
-			if(this.imssByPlayer.get(player).size() > Main.config.ims.getLimit(m.getWorld()))
+			if (this.imssByPlayer.get(player).size() > Main.config.ims.getLimit(m.getWorld()))
 			{
 				List<WpIMS> imss = new ArrayList<>(this.imssByPlayer.get(player));
-				if(imss.size() > 0)
+				if (imss.size() > 0)
 				{
 					WpIMS tims = imss.get(0);
 					tims.remove();
@@ -83,28 +85,31 @@ public class IMS implements Weapon, MineFightEventListener
 			}
 			pdie.setCancelled(false);
 		}
-		else if(event instanceof PlayerPickupItemEvent)
+		else if (event instanceof PlayerPickupItemEvent)
 		{
-			PlayerPickupItemEvent ppie = (PlayerPickupItemEvent)event;
-			if(ppie.getItem().getItemStack().getType() != this.getMaterial(m.getWorld()))
+			PlayerPickupItemEvent ppie = (PlayerPickupItemEvent) event;
+			if (ppie.getItem().getItemStack().getType() != this.getMaterial(m.getWorld()))
 				return;
 			PVPPlayer player = m.getPlayerExact(ppie.getPlayer());
-			if(player == null || !player.isSpawned())
+			if (player == null || !player.isSpawned())
 			{
 				Debugger.writeDebugOut(String.format("%s hasn't spawned. No pickup.", ppie.getPlayer().getName()));
 				ppie.setCancelled(true);
 				return;
 			}
 			WpIMS ims = this.imsByItem.get(ppie.getItem());
-			if(ims == null)
+			if (ims == null)
 				return;
 			ppie.setCancelled(true);
-			Debugger.writeDebugOut(String.format("%s is trying to pickup ims: Owner: %s", ppie.getPlayer().getName(), ims.owner.thePlayer.getName()));
-			if(player != ims.owner)
+			Debugger.writeDebugOut(String.format("%s is trying to pickup ims: Owner: %s", ppie.getPlayer().getName(),
+					ims.owner.thePlayer.getName()));
+			if (player != ims.owner)
 			{
-				if(player.getTeam() != ims.owner.getTeam() && Main.config.ims.canEnemyPickup(m.getWorld()) && player.thePlayer.isSneaking())
+				if (player.getTeam() != ims.owner.getTeam() && Main.config.ims.canEnemyPickup(m.getWorld())
+						&& player.thePlayer.isSneaking())
 				{
-					Debugger.writeDebugOut(String.format("%s is picking up a hostile ims.", ppie.getPlayer().getName()));
+					Debugger.writeDebugOut(
+							String.format("%s is picking up a hostile ims.", ppie.getPlayer().getName()));
 					ppie.setCancelled(false);
 					this.remove(ims);
 				}
@@ -114,20 +119,20 @@ public class IMS implements Weapon, MineFightEventListener
 				Debugger.writeDebugOut(String.format("%s found his own ims.", ppie.getPlayer().getName()));
 			}
 		}
-		else if(event instanceof EntityDamageEvent)
+		else if (event instanceof EntityDamageEvent)
 		{
-			EntityDamageEvent ede = (EntityDamageEvent)event;
-			if(ede.getEntity() instanceof Item)
+			EntityDamageEvent ede = (EntityDamageEvent) event;
+			if (ede.getEntity() instanceof Item)
 			{
-				Item item = (Item)ede.getEntity();
-				if(item.getItemStack().getType() != this.getMaterial(m.getWorld()))
+				Item item = (Item) ede.getEntity();
+				if (item.getItemStack().getType() != this.getMaterial(m.getWorld()))
 					return;
 				WpIMS ims = this.imsByItem.get(item);
-				if(ims == null)
+				if (ims == null)
 					return;
 				Debugger.writeDebugOut("ims damaged");
 				ede.setCancelled(true);
-				if(ede.getCause() == DamageCause.BLOCK_EXPLOSION || ede.getCause() == DamageCause.ENTITY_EXPLOSION)
+				if (ede.getCause() == DamageCause.BLOCK_EXPLOSION || ede.getCause() == DamageCause.ENTITY_EXPLOSION)
 				{
 					Debugger.writeDebugOut("ims damaged by explosion. Exploding.");
 					this.remove(ims);
@@ -136,30 +141,30 @@ public class IMS implements Weapon, MineFightEventListener
 				}
 			}
 		}
-		else if(event instanceof EntityCombustEvent)
+		else if (event instanceof EntityCombustEvent)
 		{
-			EntityCombustEvent ice = (EntityCombustEvent)event;
-			if(ice.getEntity() instanceof Item)
+			EntityCombustEvent ice = (EntityCombustEvent) event;
+			if (ice.getEntity() instanceof Item)
 			{
-				Item item = (Item)ice.getEntity();
-				if(item.getItemStack().getType() != this.getMaterial(m.getWorld()))
+				Item item = (Item) ice.getEntity();
+				if (item.getItemStack().getType() != this.getMaterial(m.getWorld()))
 					return;
 				WpIMS ims = this.imsByItem.get(item);
-				if(ims == null)
+				if (ims == null)
 					return;
 				ice.setCancelled(true);
 				ims.remove();
 				return;
 			}
 		}
-		else if(event instanceof ItemDespawnEvent)
+		else if (event instanceof ItemDespawnEvent)
 		{
-			ItemDespawnEvent ide = (ItemDespawnEvent)event;
-			Item item = (Item)ide.getEntity();
-			if(item.getItemStack().getType() != this.getMaterial(m.getWorld()))
+			ItemDespawnEvent ide = (ItemDespawnEvent) event;
+			Item item = (Item) ide.getEntity();
+			if (item.getItemStack().getType() != this.getMaterial(m.getWorld()))
 				return;
 			WpIMS ims = this.imsByItem.get(item);
-			if(ims == null)
+			if (ims == null)
 				return;
 			ide.setCancelled(true);
 		}
@@ -168,16 +173,16 @@ public class IMS implements Weapon, MineFightEventListener
 	@Override
 	public void onKill(Match m, PVPPlayer killer, PVPPlayer killed)
 	{
-		//nop
+		// nop
 	}
 
 	@Override
-	public void onDeath(Match m, PVPPlayer killed, PVPPlayer killer) 
+	public void onDeath(Match m, PVPPlayer killed, PVPPlayer killer)
 	{
-		if(Main.config.ims.despawnOnDeath(m.getWorld()))
+		if (Main.config.ims.despawnOnDeath(m.getWorld()))
 		{
 			List<WpIMS> imss = new ArrayList<>(this.imssByPlayer.get(killed));
-			for(WpIMS ims : imss)
+			for (WpIMS ims : imss)
 			{
 				this.remove(ims);
 				ims.remove();
@@ -186,19 +191,19 @@ public class IMS implements Weapon, MineFightEventListener
 	}
 
 	@Override
-	public void onRespawn(Match m, PVPPlayer player) 
+	public void onRespawn(Match m, PVPPlayer player)
 	{
-		//nop
+		// nop
 	}
 
 	@Override
-	public void matchCreated(Match m) 
+	public void matchCreated(Match m)
 	{
 		imssByMatch.put(m, new ArrayList<WpIMS>());
 	}
 
 	@Override
-	public void matchEnded(Match m) 
+	public void matchEnded(Match m)
 	{
 		imssByMatch.remove(m);
 	}
@@ -206,22 +211,22 @@ public class IMS implements Weapon, MineFightEventListener
 	@Override
 	public void onTick()
 	{
-		//nop
+		// nop
 	}
 
 	@Override
-	public void onJoin(Match m, PVPPlayer player) 
+	public void onJoin(Match m, PVPPlayer player)
 	{
 		Debugger.writeDebugOut("Creating ims-entry for " + player.thePlayer.getName());
 		imssByPlayer.put(player, new ArrayList<WpIMS>());
 	}
 
 	@Override
-	public void onLeave(Match m, PVPPlayer player) 
+	public void onLeave(Match m, PVPPlayer player)
 	{
 		Debugger.writeDebugOut("Removing ims-entry for " + player.thePlayer.getName());
 		List<WpIMS> imss = imssByPlayer.get(player);
-		for(WpIMS ims : imss)
+		for (WpIMS ims : imss)
 		{
 			imsByItem.remove(ims.item);
 			ims.remove();
@@ -235,7 +240,7 @@ public class IMS implements Weapon, MineFightEventListener
 	{
 		Debugger.writeDebugOut("Removing ims due to teamchange: " + player.thePlayer.getName());
 		List<WpIMS> imss = new ArrayList<>(this.imssByPlayer.get(player));
-		for(WpIMS ims : imss)
+		for (WpIMS ims : imss)
 		{
 			this.remove(ims);
 			ims.remove();
@@ -249,14 +254,15 @@ public class IMS implements Weapon, MineFightEventListener
 	}
 
 	@Override
-	public short getSubId(World w) 
+	public short getSubId(World w)
 	{
 		return Main.config.ims.getSubid(w);
 	}
-	
+
 	private void remove(WpIMS ims)
 	{
-		if(ims.item != null) this.imsByItem.remove(ims.item);
+		if (ims.item != null)
+			this.imsByItem.remove(ims.item);
 		this.imssByMatch.get(ims.owner.getMatch()).remove(ims);
 		this.imssByPlayer.get(ims.owner).remove(ims);
 	}

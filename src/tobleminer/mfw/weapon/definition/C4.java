@@ -32,10 +32,10 @@ import tobleminer.minefight.weapon.Weapon;
 
 public class C4 implements Weapon, MineFightEventListener
 {
-	private HashMap<Match, List<WpC4>> c4sByMatch = new HashMap<>();
-	private HashMap<Item, WpC4> c4sByItem = new HashMap<>();
-	private HashMap<PVPPlayer, List<WpC4>> c4sByPlayer = new HashMap<>();
-		
+	private HashMap<Match, List<WpC4>>		c4sByMatch	= new HashMap<>();
+	private HashMap<Item, WpC4>				c4sByItem	= new HashMap<>();
+	private HashMap<PVPPlayer, List<WpC4>>	c4sByPlayer	= new HashMap<>();
+
 	@Override
 	public void getRequiredEvents(List<Class<?>> events)
 	{
@@ -53,26 +53,27 @@ public class C4 implements Weapon, MineFightEventListener
 	public void onEvent(Match m, Event event)
 	{
 		World w = m.getWorld();
-		if(event instanceof PlayerInteractEvent)
+		if (event instanceof PlayerInteractEvent)
 		{
-			PlayerInteractEvent pie = (PlayerInteractEvent)event;
+			PlayerInteractEvent pie = (PlayerInteractEvent) event;
 			PVPPlayer player = m.getPlayerExact(pie.getPlayer());
-			if(player == null || !player.isSpawned())
+			if (player == null || !player.isSpawned())
 			{
 				Debugger.writeDebugOut("c4 not created: Player not spawned: " + pie.getPlayer().getName());
 				pie.setCancelled(true);
 				return;
 			}
 			ItemStack inHand = player.thePlayer.getItemInHand();
-			if(inHand == null)
+			if (inHand == null)
 				return;
 			Action action = pie.getAction();
-			if(inHand.getType() == Main.config.c4.getDetonatorMaterial(w) && inHand.getDurability() == Main.config.c4.getDetonatorSubId(w))
+			if (inHand.getType() == Main.config.c4.getDetonatorMaterial(w)
+					&& inHand.getDurability() == Main.config.c4.getDetonatorSubId(w))
 			{
-				if(action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)
+				if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)
 				{
 					List<WpC4> c4s = new ArrayList<>(this.c4sByPlayer.get(player));
-					for(WpC4 c4 : c4s)
+					for (WpC4 c4 : c4s)
 					{
 						c4.explode();
 						this.remove(c4);
@@ -80,48 +81,52 @@ public class C4 implements Weapon, MineFightEventListener
 					pie.setCancelled(true);
 				}
 			}
-			else if(inHand.getType() == this.getMaterial(m.getWorld()) && inHand.getDurability() == this.getSubId(m.getWorld()))			
+			else if (inHand.getType() == this.getMaterial(m.getWorld())
+					&& inHand.getDurability() == this.getSubId(m.getWorld()))
 			{
-				if(action == Action.RIGHT_CLICK_BLOCK)
+				if (action == Action.RIGHT_CLICK_BLOCK)
 				{
 					Block b = pie.getClickedBlock();
-					if((!Util.protect.isBlockProtected(b)) || Main.config.c4.ignoreProtection(w))
+					if ((!Util.protect.isBlockProtected(b)) || Main.config.c4.ignoreProtection(w))
 					{
 						WpC4 c4 = new WpC4(b, null, player, m);
 						this.c4sByPlayer.get(player).add(c4);
 						this.c4sByMatch.get(m).add(c4);
-						if(this.c4sByPlayer.get(player).size() > Main.config.c4.getLimit(m.getWorld()))
+						if (this.c4sByPlayer.get(player).size() > Main.config.c4.getLimit(m.getWorld()))
 						{
 							List<WpC4> c4s = new ArrayList<>(this.c4sByPlayer.get(player));
-							if(c4s.size() > 0)
+							if (c4s.size() > 0)
 							{
 								WpC4 tc4 = c4s.get(0);
 								tc4.remove();
 								this.remove(tc4);
 							}
 						}
-						player.thePlayer.getInventory().removeItem(new ItemStack(this.getMaterial(m.getWorld()), 1, this.getSubId(m.getWorld())));
+						player.thePlayer.getInventory().removeItem(
+								new ItemStack(this.getMaterial(m.getWorld()), 1, this.getSubId(m.getWorld())));
 						player.thePlayer.updateInventory();
 						pie.setCancelled(true);
 					}
 				}
 			}
 		}
-		else if(event instanceof PlayerDropItemEvent)
+		else if (event instanceof PlayerDropItemEvent)
 		{
-			PlayerDropItemEvent pdie = (PlayerDropItemEvent)event;
-			if(pdie.getItemDrop().getItemStack().getType() != this.getMaterial(m.getWorld()) || pdie.getItemDrop().getItemStack().getDurability() != this.getSubId(m.getWorld()))
+			PlayerDropItemEvent pdie = (PlayerDropItemEvent) event;
+			if (pdie.getItemDrop().getItemStack().getType() != this.getMaterial(m.getWorld())
+					|| pdie.getItemDrop().getItemStack().getDurability() != this.getSubId(m.getWorld()))
 				return;
 			Debugger.writeDebugOut("c4 dropped by " + pdie.getPlayer().getName());
 			PVPPlayer player = m.getPlayerExact(pdie.getPlayer());
-			if(player == null || !player.isSpawned())
+			if (player == null || !player.isSpawned())
 			{
 				Debugger.writeDebugOut("c4 not created: Player not spawned: " + pdie.getPlayer().getName());
 				pdie.setCancelled(true);
 				return;
 			}
 			Item item = pdie.getItemDrop();
-			if(Main.papi.getProtections().isLocProtected(item.getLocation()) && !Main.config.c4.ignoreProtection(item.getWorld()))
+			if (Main.papi.getProtections().isLocProtected(item.getLocation())
+					&& !Main.config.c4.ignoreProtection(item.getWorld()))
 			{
 				Debugger.writeDebugOut("c4 not created: Area protected: " + pdie.getPlayer().getName());
 				pdie.setCancelled(true);
@@ -132,10 +137,10 @@ public class C4 implements Weapon, MineFightEventListener
 			this.c4sByPlayer.get(player).add(c4);
 			this.c4sByItem.put(item, c4);
 			this.c4sByMatch.get(m).add(c4);
-			if(this.c4sByPlayer.get(player).size() > Main.config.c4.getLimit(m.getWorld()))
+			if (this.c4sByPlayer.get(player).size() > Main.config.c4.getLimit(m.getWorld()))
 			{
 				List<WpC4> c4s = new ArrayList<>(this.c4sByPlayer.get(player));
-				if(c4s.size() > 0)
+				if (c4s.size() > 0)
 				{
 					WpC4 tc4 = c4s.get(0);
 					tc4.remove();
@@ -144,26 +149,28 @@ public class C4 implements Weapon, MineFightEventListener
 			}
 			pdie.setCancelled(false);
 		}
-		else if(event instanceof PlayerPickupItemEvent)
+		else if (event instanceof PlayerPickupItemEvent)
 		{
-			PlayerPickupItemEvent ppie = (PlayerPickupItemEvent)event;
-			if(ppie.getItem().getItemStack().getType() != this.getMaterial(m.getWorld()))
+			PlayerPickupItemEvent ppie = (PlayerPickupItemEvent) event;
+			if (ppie.getItem().getItemStack().getType() != this.getMaterial(m.getWorld()))
 				return;
 			PVPPlayer player = m.getPlayerExact(ppie.getPlayer());
-			if(player == null || !player.isSpawned())
+			if (player == null || !player.isSpawned())
 			{
 				ppie.setCancelled(true);
 				Debugger.writeDebugOut(String.format("%s hasn't spawned. No pickup.", ppie.getPlayer().getName()));
 				return;
 			}
 			WpC4 c4 = this.c4sByItem.get(ppie.getItem());
-			if(c4 == null)
+			if (c4 == null)
 				return;
 			ppie.setCancelled(true);
-			Debugger.writeDebugOut(String.format("%s is trying to pickup c4: Owner: %s", ppie.getPlayer().getName(), c4.owner.thePlayer.getName()));
-			if(player != c4.owner)
+			Debugger.writeDebugOut(String.format("%s is trying to pickup c4: Owner: %s", ppie.getPlayer().getName(),
+					c4.owner.thePlayer.getName()));
+			if (player != c4.owner)
 			{
-				if(player.getTeam() != c4.owner.getTeam() && Main.config.c4.canEnemyPickup(m.getWorld()) && player.thePlayer.isSneaking())
+				if (player.getTeam() != c4.owner.getTeam() && Main.config.c4.canEnemyPickup(m.getWorld())
+						&& player.thePlayer.isSneaking())
 				{
 					Debugger.writeDebugOut(String.format("%s is picking up a hostile c4.", ppie.getPlayer().getName()));
 					ppie.setCancelled(false);
@@ -173,7 +180,7 @@ public class C4 implements Weapon, MineFightEventListener
 			else
 			{
 				Debugger.writeDebugOut(String.format("%s found his own c4.", ppie.getPlayer().getName()));
-				if(player.thePlayer.isSneaking() && Main.config.c4.canOwnerPickup(m.getWorld()))
+				if (player.thePlayer.isSneaking() && Main.config.c4.canOwnerPickup(m.getWorld()))
 				{
 					Debugger.writeDebugOut(String.format("%s is picking up his c4.", ppie.getPlayer().getName()));
 					ppie.setCancelled(false);
@@ -181,20 +188,20 @@ public class C4 implements Weapon, MineFightEventListener
 				}
 			}
 		}
-		else if(event instanceof EntityDamageEvent)
+		else if (event instanceof EntityDamageEvent)
 		{
-			EntityDamageEvent ede = (EntityDamageEvent)event;
-			if(ede.getEntity() instanceof Item)
+			EntityDamageEvent ede = (EntityDamageEvent) event;
+			if (ede.getEntity() instanceof Item)
 			{
-				Item item = (Item)ede.getEntity();
-				if(item.getItemStack().getType() != this.getMaterial(m.getWorld()))
+				Item item = (Item) ede.getEntity();
+				if (item.getItemStack().getType() != this.getMaterial(m.getWorld()))
 					return;
 				WpC4 c4 = this.c4sByItem.get(item);
-				if(c4 == null)
+				if (c4 == null)
 					return;
 				Debugger.writeDebugOut("c4 damaged");
 				ede.setCancelled(true);
-				if(ede.getCause() == DamageCause.BLOCK_EXPLOSION || ede.getCause() == DamageCause.ENTITY_EXPLOSION)
+				if (ede.getCause() == DamageCause.BLOCK_EXPLOSION || ede.getCause() == DamageCause.ENTITY_EXPLOSION)
 				{
 					Debugger.writeDebugOut("c4 damaged by explosion. Exploding.");
 					c4.explode();
@@ -203,30 +210,30 @@ public class C4 implements Weapon, MineFightEventListener
 				}
 			}
 		}
-		else if(event instanceof EntityCombustEvent)
+		else if (event instanceof EntityCombustEvent)
 		{
-			EntityCombustEvent ice = (EntityCombustEvent)event;
-			if(ice.getEntity() instanceof Item)
+			EntityCombustEvent ice = (EntityCombustEvent) event;
+			if (ice.getEntity() instanceof Item)
 			{
-				Item item = (Item)ice.getEntity();
-				if(item.getItemStack().getType() != this.getMaterial(m.getWorld()))
+				Item item = (Item) ice.getEntity();
+				if (item.getItemStack().getType() != this.getMaterial(m.getWorld()))
 					return;
 				WpC4 c4 = this.c4sByItem.get(item);
-				if(c4 == null)
+				if (c4 == null)
 					return;
 				ice.setCancelled(true);
 				c4.explode();
 				return;
 			}
 		}
-		else if(event instanceof ItemDespawnEvent)
+		else if (event instanceof ItemDespawnEvent)
 		{
-			ItemDespawnEvent ide = (ItemDespawnEvent)event;
-			Item item = (Item)ide.getEntity();
-			if(item.getItemStack().getType() != this.getMaterial(m.getWorld()))
+			ItemDespawnEvent ide = (ItemDespawnEvent) event;
+			Item item = (Item) ide.getEntity();
+			if (item.getItemStack().getType() != this.getMaterial(m.getWorld()))
 				return;
 			WpC4 c4 = this.c4sByItem.get(item);
-			if(c4 == null)
+			if (c4 == null)
 				return;
 			ide.setCancelled(true);
 		}
@@ -235,16 +242,16 @@ public class C4 implements Weapon, MineFightEventListener
 	@Override
 	public void onKill(Match m, PVPPlayer killer, PVPPlayer killed)
 	{
-		//nop
+		// nop
 	}
 
 	@Override
-	public void onDeath(Match m, PVPPlayer killed, PVPPlayer killer) 
+	public void onDeath(Match m, PVPPlayer killed, PVPPlayer killer)
 	{
-		if(Main.config.c4.despawnOnDeath(m.getWorld()))
+		if (Main.config.c4.despawnOnDeath(m.getWorld()))
 		{
 			List<WpC4> c4s = new ArrayList<>(this.c4sByPlayer.get(killed));
-			for(WpC4 c4 : c4s)
+			for (WpC4 c4 : c4s)
 			{
 				this.remove(c4);
 				c4.remove();
@@ -253,19 +260,19 @@ public class C4 implements Weapon, MineFightEventListener
 	}
 
 	@Override
-	public void onRespawn(Match m, PVPPlayer player) 
+	public void onRespawn(Match m, PVPPlayer player)
 	{
-		//nop
+		// nop
 	}
 
 	@Override
-	public void matchCreated(Match m) 
+	public void matchCreated(Match m)
 	{
 		c4sByMatch.put(m, new ArrayList<WpC4>());
 	}
 
 	@Override
-	public void matchEnded(Match m) 
+	public void matchEnded(Match m)
 	{
 		c4sByMatch.remove(m);
 	}
@@ -273,24 +280,24 @@ public class C4 implements Weapon, MineFightEventListener
 	@Override
 	public void onTick()
 	{
-		//nop
+		// nop
 	}
 
 	@Override
-	public void onJoin(Match m, PVPPlayer player) 
+	public void onJoin(Match m, PVPPlayer player)
 	{
 		Debugger.writeDebugOut("Creating c4-entry for " + player.thePlayer.getName());
 		c4sByPlayer.put(player, new ArrayList<WpC4>());
 	}
 
 	@Override
-	public void onLeave(Match m, PVPPlayer player) 
+	public void onLeave(Match m, PVPPlayer player)
 	{
 		Debugger.writeDebugOut("Removing c4-entry for " + player.thePlayer.getName());
 		List<WpC4> c4s = c4sByPlayer.get(player);
-		for(WpC4 c4 : c4s)
+		for (WpC4 c4 : c4s)
 		{
-			if(c4.item != null)
+			if (c4.item != null)
 				c4sByItem.remove(c4.item);
 			c4.remove();
 			c4sByMatch.get(m).remove(c4);
@@ -303,7 +310,7 @@ public class C4 implements Weapon, MineFightEventListener
 	{
 		Debugger.writeDebugOut("Removing c4 due to teamchange: " + player.thePlayer.getName());
 		List<WpC4> c4s = new ArrayList<>(this.c4sByPlayer.get(player));
-		for(WpC4 c4 : c4s)
+		for (WpC4 c4 : c4s)
 		{
 			this.remove(c4);
 			c4.remove();
@@ -317,14 +324,15 @@ public class C4 implements Weapon, MineFightEventListener
 	}
 
 	@Override
-	public short getSubId(World w) 
+	public short getSubId(World w)
 	{
 		return Main.config.c4.getSubid(w);
 	}
-	
+
 	private void remove(WpC4 c4)
 	{
-		if(c4.item != null) this.c4sByItem.remove(c4.item);
+		if (c4.item != null)
+			this.c4sByItem.remove(c4.item);
 		this.c4sByMatch.get(c4.owner.getMatch()).remove(c4);
 		this.c4sByPlayer.get(c4.owner).remove(c4);
 	}

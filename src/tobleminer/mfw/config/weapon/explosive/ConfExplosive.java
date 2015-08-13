@@ -10,17 +10,17 @@ import tobleminer.mfw.config.weapon.ConfWeapon;
 public abstract class ConfExplosive extends ConfWeapon
 {
 
-	public ConfExplosive(File confdir, boolean forceReset) 
+	public ConfExplosive(File confdir, boolean forceReset)
 	{
 		super(confdir, forceReset);
 	}
-	
+
 	public float getBlastPower(World w)
 	{
 		YamlConfiguration conf = this.getConfig(w);
-		if(conf != null)
+		if (conf != null)
 		{
-			return (float)conf.getDouble("blastpower");
+			return (float) conf.getDouble("blastpower");
 		}
 		return 0;
 	}
